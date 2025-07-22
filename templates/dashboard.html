@@ -46,7 +46,7 @@
                 {% if created_events %}
                     <div class="space-y-4">
                         {% for event in created_events %}
-                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50" style="hover:background-color: #F9F6F1;">
+                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <a href="/event/{{ event['id'] }}" class="font-medium hover:underline transition-colors" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
@@ -107,7 +107,7 @@
                 {% if participated_events %}
                     <div class="space-y-4">
                         {% for event in participated_events %}
-                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50" style="hover:background-color: #F9F6F1;">
+                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <a href="/event/{{ event['id'] }}" class="font-medium hover:underline transition-colors" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
@@ -178,4 +178,13 @@
         </div>
     </div>
 </div>
+<script>
+// Remove all background highlights in dark mode for dashboard
+if (document.body.classList.contains('dark-mode')) {
+  document.querySelectorAll('.card *, .activity-summary *').forEach(function(el) {
+    el.style.background = 'transparent';
+    el.style.backgroundColor = 'transparent';
+  });
+}
+</script>
 {% end %}

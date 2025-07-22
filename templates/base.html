@@ -1,97 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}EventStack - Schedule Smarter, Vote Faster{% end %}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}EventStack - Schedule Smarter, Vote Faster{% end %}
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/static/css/custom.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/static/images/favicon.png">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/static/css/custom.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/static/images/favicon.png" />
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'eventstack-orange': '#D67253',
-                        'eventstack-orange-dark': '#C5634A',
-                        'eventstack-orange-light': '#E08B73',
-                        'eventstack-bg': '#F9F6F1',
-                        'eventstack-bg-dark': '#F0EDE6',
-                        // Keep some GitHub colors for compatibility
-                        'github': '#24292e',
-                        'github-blue': '#0366d6',
-                        'github-green': '#28a745',
-                        'github-gray': '#f6f8fa'
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "eventstack-orange": "#D67253",
+              "eventstack-orange-dark": "#C5634A",
+              "eventstack-orange-light": "#E08B73",
+              "eventstack-bg": "#F9F6F1",
+              "eventstack-bg-dark": "#F0EDE6",
+              // Keep some GitHub colors for compatibility
+              github: "#24292e",
+              "github-blue": "#0366d6",
+              "github-green": "#28a745",
+              "github-gray": "#f6f8fa",
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="bg-eventstack-bg min-h-screen">
+  </head>
+  <body class="bg-eventstack-bg min-h-screen">
     <!-- Navigation -->
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="/" class="flex items-center space-x-3 group">
-                        <!-- Logo image -->
-                        <div class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
-                            <img src="/static/images/image 3.png" alt="EventStack Logo" class="w-full h-full object-contain" />
-                        </div>
-                    </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    {% if user %}
-                        <a href="/create" class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium">
-                            <i class="fas fa-plus mr-2"></i>New Event
-                        </a>
-                        <div class="flex items-center space-x-3">
-                            <a href="/dashboard" class="flex items-center space-x-2 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors duration-200">
-                                <img src="{{ user['avatar_url'] }}" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-eventstack-orange">
-                                <span class="text-gray-700 font-medium">{{ user['username'] }}</span>
-                            </a>
-                            <a href="/logout" class="text-gray-500 hover:text-red-600 p-2 rounded-lg hover:bg-gray-50 transition-all duration-200" title="Sign out">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </a>
-                        </div>
-                    {% else %}
-                        <a href="/login" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
-                            <i class="fab fa-github mr-2"></i>Sign in with GitHub
-                        </a>
-                    {% end %}
-                </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-3 group">
+              <!-- Logo image -->
+              <div
+                class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200"
+              >
+                <img
+                  src="/static/images/image 3.png"
+                  alt="EventStack Logo"
+                  class="w-full h-full object-contain"
+                />
+              </div>
+            </a>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            {% if user %}
+            <a
+              href="/create"
+              class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium"
+            >
+              <i class="fas fa-plus mr-2"></i>New Event
+            </a>
+            <div class="flex items-center space-x-3">
+              <a
+                href="/dashboard"
+                class="flex items-center space-x-2 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors duration-200"
+              >
+                <img
+                  src="{{ user['avatar_url'] }}"
+                  alt="Avatar"
+                  class="w-8 h-8 rounded-full border-2 border-eventstack-orange"
+                />
+                <span class="text-gray-700 font-medium"
+                  >{{ user['username'] }}</span
+                >
+              </a>
+              <a
+                href="/logout"
+                class="text-gray-500 hover:text-red-600 p-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                title="Sign out"
+              >
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
             </div>
+            {% else %}
+            <a
+              href="/login"
+              class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+            >
+              <i class="fab fa-github mr-2"></i>Sign in with GitHub
+            </a>
+            {% end %}
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% block content %}{% end %}
+      {% block content %}{% end %}
     </main>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
-                <div class="flex items-center space-x-3">
-                    <img src="/static/images/image 3.png" alt="EventStack Logo" class="w-12 h-12 object-contain" />
-                </div>
-                <div class="text-center text-gray-500 text-sm">
-                    <p>&copy; 2025 EventStack. Built with Tornado.</p>
-                </div>
-                <div class="flex items-center space-x-3 text-xs text-gray-500">
-                    <a href="/about" class="hover:text-eventstack-orange transition-colors">About</a>
-                    <a href="/privacy" class="hover:text-eventstack-orange transition-colors">Privacy</a>
-                    <a href="/support" class="hover:text-eventstack-orange transition-colors">Support</a>
-                </div>
-            </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0"
+        >
+          <div class="flex items-center space-x-3">
+            <img
+              src="/static/images/image 3.png"
+              alt="EventStack Logo"
+              class="w-12 h-12 object-contain"
+            />
+          </div>
+          <div class="text-center text-gray-500 text-sm">
+            <p>&copy; 2025 EventStack. Built with Tornado.</p>
+          </div>
+          <div class="flex items-center space-x-3 text-xs text-gray-500">
+            <a
+              href="/about"
+              class="hover:text-eventstack-orange transition-colors"
+              >About</a
+            >
+            <a
+              href="/privacy"
+              class="hover:text-eventstack-orange transition-colors"
+              >Privacy</a
+            >
+            <a
+              href="/support"
+              class="hover:text-eventstack-orange transition-colors"
+              >Support</a
+            >
+          </div>
         </div>
+      </div>
     </footer>
 
     <script src="/static/js/app.js"></script>
     {% block scripts %}{% end %}
-</body>
+  </body>
 </html>
