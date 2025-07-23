@@ -1,8 +1,13 @@
 import sqlite3
 import os
 from datetime import datetime
-from dotenv import load_dotenv
-load_dotenv()
+
+# Try to import and load dotenv, but continue without it if not available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("Warning: python-dotenv not available, using default environment variables")
 
 def get_db_connection():
     db_path = os.environ.get('DATABASE_PATH', 'quickmeet.db')

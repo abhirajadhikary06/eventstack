@@ -4,8 +4,13 @@ import requests
 import json
 import os
 from models.db import get_db_connection, create_user, get_user_by_github_id
-from dotenv import load_dotenv
-load_dotenv()
+
+# Try to import and load dotenv, but continue without it if not available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 class LoginHandler(tornado.web.RequestHandler):
     def get(self):

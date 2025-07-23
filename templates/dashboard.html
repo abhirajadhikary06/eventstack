@@ -1,190 +1,379 @@
-{% extends "base.html" %}
-
-{% block title %}Dashboard - EventStack{% end %}
-
-{% block content %}
-<div class="max-w-6xl mx-auto">
-    <!-- Welcome Header -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div class="flex items-center space-x-4">
-            <img src="{{ user['avatar_url'] }}" alt="{{ user['username'] }}" class="w-12 h-12 rounded-full border-2" style="border-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-            <div>
-                <h1 class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">Welcome back, {{ user['username'] }}!</h1>
-                <p class="text-gray-600">Manage your events and see participation activity.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EventStack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../static/css/custom.css" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "eventstack-orange": "#D67253",
+              "eventstack-orange-dark": "#C5634A",
+              "eventstack-orange-light": "#E08B73",
+              "eventstack-bg": "#F9F6F1",
+              "eventstack-bg-dark": "#F0EDE6",
+            },
+          },
+        },
+      };
+    </script>
+</head>
+<body class="bg-eventstack-bg min-h-screen">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3 group">
+                        <div class="w-8 h-8 bg-eventstack-orange rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calendar-alt text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold text-gray-800">EventStack</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-700 hover:text-eventstack-orange px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="/create" class="bg-eventstack-orange hover:bg-eventstack-orange-dark text-white px-4 py-2 rounded-md text-sm font-medium">Create Event</a>
+                </div>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-lg font-semibold mb-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">Quick Actions</h2>
-                <p class="text-gray-600">Get started with common tasks.</p>
-            </div>
-            <div class="flex space-x-3">
-                <a href="/create" 
-                   class="text-white px-4 py-2 rounded-md transition-colors hover:opacity-90" 
-                   style="background-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                    <i class="fas fa-plus mr-2"></i>New Event
-                </a>
-            </div>
-        </div>
-    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="space-y-8">
 
-    <div class="grid lg:grid-cols-2 gap-6">
-        <!-- Created Events -->
-        <div class="bg-white rounded-lg shadow-md">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                    <i class="fas fa-calendar-plus mr-2"></i>Events You Created
-                </h2>
-                <p class="text-gray-600 text-sm mt-1">{{ len(created_events) }} events</p>
-            </div>
-            
-            <div class="p-6">
-                {% if created_events %}
-                    <div class="space-y-4">
-                        {% for event in created_events %}
-                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50">
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1">
-                                    <a href="/event/{{ event['id'] }}" class="font-medium hover:underline transition-colors" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                        {{ event['title'] }}
-                                    </a>
-                                    {% if event['description'] %}
-                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}...{% end %}</p>
-                                    {% end %}
-                                    <div class="flex items-center text-xs text-gray-500 mt-2 space-x-3">
-                                        <span>
-                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10] }}
-                                        </span>
-                                        {% if event['location'] %}
-                                        <span>
-                                            <i class="fas fa-map-marker-alt mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['location'][:30] }}
-                                        </span>
-                                        {% end %}
-                                    </div>
-                                </div>
-                                {% if event['is_finalized'] %}
-                                <span class="text-white px-2 py-1 rounded-full text-xs" style="background-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                    <i class="fas fa-check mr-1"></i>Finalized
-                                </span>
-                                {% else %}
-                                <span class="px-2 py-1 rounded-full text-xs" style="background-color: #F9F6F1; color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                    <i class="fas fa-clock mr-1"></i>Active
-                                </span>
-                                {% end %}
+            <!-- Welcome Card with Enhanced Design -->
+            <div class="welcome-gradient bg-gradient-to-r from-eventstack-orange to-eventstack-orange-dark p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
+                <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-32 translate-x-32"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="animate-fade-in">
+                            <h1 class="text-4xl font-bold mb-2">
+                                Welcome back, John Doe 👋
+                            </h1>
+                            <p class="text-white/90 text-lg">Manage your events and participation with ease.</p>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <i class="fas fa-calendar-alt text-3xl"></i>
                             </div>
                         </div>
-                        {% end %}
                     </div>
-                {% else %}
-                    <div class="text-center py-8">
-                        <i class="fas fa-calendar-plus text-4xl mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.6;"></i>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">No events created yet</h3>
-                        <p class="text-gray-600 mb-4">Create your first event to get started with scheduling.</p>
-                        <a href="/create" 
-                           class="inline-flex items-center text-white px-4 py-2 rounded-md transition-colors hover:opacity-90" 
-                           style="background-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                            <i class="fas fa-plus mr-2"></i>Create First Event
-                        </a>
-                    </div>
-                {% end %}
+                </div>
             </div>
-        </div>
 
-        <!-- Participated Events -->
-        <div class="bg-white rounded-lg shadow-md">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                    <i class="fas fa-vote-yea mr-2"></i>Events You Participated In
-                </h2>
-                <p class="text-gray-600 text-sm mt-1">{{ len(participated_events) }} events</p>
+            <!-- Quick Actions with Enhanced Design -->
+            <div class="dashboard-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-r from-eventstack-orange to-eventstack-orange-dark rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-bolt text-white text-sm"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">Quick Actions</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="/create" class="btn-enhanced group bg-gradient-to-r from-eventstack-orange to-eventstack-orange-dark hover:from-eventstack-orange-dark hover:to-eventstack-orange text-white px-6 py-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-3">
+                        <i class="fas fa-plus text-lg"></i>
+                        <span class="font-medium">Create Event</span>
+                    </a>
+                    <button class="btn-enhanced group bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-4 rounded-lg transition-all duration-200 flex items-center space-x-3">
+                        <i class="fas fa-search text-lg"></i>
+                        <span class="font-medium">Browse Events</span>
+                    </button>
+                    <button class="btn-enhanced group bg-blue-100 hover:bg-blue-200 text-blue-700 px-6 py-4 rounded-lg transition-all duration-200 flex items-center space-x-3">
+                        <i class="fas fa-users text-lg"></i>
+                        <span class="font-medium">Join Event</span>
+                    </button>
+                    <button class="btn-enhanced group bg-green-100 hover:bg-green-200 text-green-700 px-6 py-4 rounded-lg transition-all duration-200 flex items-center space-x-3">
+                        <i class="fas fa-chart-line text-lg"></i>
+                        <span class="font-medium">Analytics</span>
+                    </button>
+                </div>
             </div>
-            
-            <div class="p-6">
-                {% if participated_events %}
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="stats-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-eventstack-orange to-eventstack-orange-dark rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-plus text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-eventstack-orange mb-2">5</h3>
+                    <p class="text-gray-600 font-medium">Events Created</p>
+                    <p class="text-sm text-gray-400 mt-1">Total events organized</p>
+                </div>
+                <div class="stats-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-blue-500 mb-2">12</h3>
+                    <p class="text-gray-600 font-medium">Events Joined</p>
+                    <p class="text-sm text-gray-400 mt-1">Total participations</p>
+                </div>
+                <div class="stats-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bolt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-green-500 mb-2">3</h3>
+                    <p class="text-gray-600 font-medium">Active Events</p>
+                    <p class="text-sm text-gray-400 mt-1">Currently running</p>
+                </div>
+            </div>
+
+            <!-- Events Created Section -->
+            <div class="dashboard-card bg-white rounded-xl shadow-lg border border-gray-100">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-eventstack-orange-light to-eventstack-orange rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-calendar-plus text-white text-sm"></i>
+                            </div>
+                            <h2 class="text-2xl font-semibold text-gray-800">Events You Created</h2>
+                        </div>
+                        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                            5 events
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="p-6">
                     <div class="space-y-4">
-                        {% for event in participated_events %}
-                        <div class="border rounded-lg p-4 transition-colors hover:bg-gray-50">
-                            <div class="flex items-start justify-between">
+                        <div class="event-card p-6 border border-gray-200 rounded-lg hover:shadow-md hover:border-eventstack-orange transition-all duration-200 group">
+                            <div class="flex justify-between items-start">
                                 <div class="flex-1">
-                                    <a href="/event/{{ event['id'] }}" class="font-medium hover:underline transition-colors" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                        {{ event['title'] }}
-                                    </a>
-                                    {% if event['description'] %}
-                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}...{% end %}</p>
-                                    {% end %}
-                                    <div class="flex items-center text-xs text-gray-500 mt-2 space-x-3">
-                                        <span>
-                                            <i class="fas fa-user mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>by {{ event['creator_username'] }}
+                                    <div class="flex items-center mb-2">
+                                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-eventstack-orange transition-colors">
+                                            Team Planning Meeting 2025
+                                        </h3>
+                                        <span class="ml-3 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                                            Active
                                         </span>
-                                        <span>
-                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10] }}
+                                    </div>
+                                    <p class="text-gray-600 mb-3 leading-relaxed">
+                                        Planning our roadmap for 2025 with all team members. We'll discuss goals, milestones, and resource allocation for the upcoming year.
+                                    </p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Created recently
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            15 views
                                         </span>
                                     </div>
                                 </div>
-                                {% if event['is_finalized'] %}
-                                <span class="text-white px-2 py-1 rounded-full text-xs" style="background-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                    <i class="fas fa-check mr-1"></i>Finalized
-                                </span>
-                                {% else %}
-                                <span class="px-2 py-1 rounded-full text-xs" style="background-color: #F9F6F1; color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                                    <i class="fas fa-clock mr-1"></i>Active
-                                </span>
-                                {% end %}
+                                <div class="ml-6 flex flex-col items-end space-y-3">
+                                    <button class="text-eventstack-orange hover:text-eventstack-orange-dark transition-colors p-2 hover:bg-orange-50 rounded-lg" title="View event details">
+                                        <i class="fas fa-arrow-right text-lg"></i>
+                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-blue-500 transition-colors p-1" title="Edit event">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-red-500 transition-colors p-1" title="Delete event">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {% end %}
+
+                        <div class="event-card p-6 border border-gray-200 rounded-lg hover:shadow-md hover:border-eventstack-orange transition-all duration-200 group">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <div class="flex items-center mb-2">
+                                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-eventstack-orange transition-colors">
+                                            Product Launch Event
+                                        </h3>
+                                        <span class="ml-3 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                                            Finalized
+                                        </span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3 leading-relaxed">
+                                        Big reveal of our newest product features and improvements. Join us for an exciting showcase of innovation and technology.
+                                    </p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Created 2 days ago
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            42 views
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ml-6 flex flex-col items-end space-y-3">
+                                    <button class="text-eventstack-orange hover:text-eventstack-orange-dark transition-colors p-2 hover:bg-orange-50 rounded-lg" title="View event details">
+                                        <i class="fas fa-arrow-right text-lg"></i>
+                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-blue-500 transition-colors p-1" title="Edit event">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-red-500 transition-colors p-1" title="Delete event">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                {% else %}
-                    <div class="text-center py-8">
-                        <i class="fas fa-vote-yea text-4xl mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.6;"></i>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">No participations yet</h3>
-                        <p class="text-gray-600">You haven't voted on any events yet. When you participate in events, they'll appear here.</p>
-                    </div>
-                {% end %}
+                </div>
             </div>
+
+            <!-- Events Participated Section -->
+            <div class="dashboard-card bg-white rounded-xl shadow-lg border border-gray-100">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-users text-white text-sm"></i>
+                            </div>
+                            <h2 class="text-2xl font-semibold text-gray-800">Events You Joined</h2>
+                        </div>
+                        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                            12 events
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="event-card p-6 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-500 transition-all duration-200 group">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <div class="flex items-center mb-2">
+                                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                                            Design Workshop 2025
+                                        </h3>
+                                        <span class="ml-3 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                                            Active
+                                        </span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3 leading-relaxed">
+                                        Interactive workshop focusing on modern design principles and user experience best practices for digital products.
+                                    </p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-user mr-1"></i>
+                                            by Alice Smith
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-calendar mr-1"></i>
+                                            Joined recently
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ml-6">
+                                    <button class="text-blue-500 hover:text-blue-700 transition-colors p-2 hover:bg-blue-50 rounded-lg" title="View event">
+                                        <i class="fas fa-arrow-right text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- Activity Summary -->
-    <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-        <h2 class="text-xl font-semibold mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-            <i class="fas fa-chart-bar mr-2"></i>Activity Summary
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">{{ len(created_events) }}</div>
-                <div class="text-sm text-gray-600">Events Created</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">{{ len(participated_events) }}</div>
-                <div class="text-sm text-gray-600">Events Participated</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-                    {{ len([e for e in created_events if e['is_finalized']]) }}
-                </div>
-                <div class="text-sm text-gray-600">Events Finalized</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.7;">
-                    {{ len([e for e in created_events if not e['is_finalized']]) }}
-                </div>
-                <div class="text-sm text-gray-600">Active Events</div>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-// Remove all background highlights in dark mode for dashboard
-if (document.body.classList.contains('dark-mode')) {
-  document.querySelectorAll('.card *, .activity-summary *').forEach(function(el) {
-    el.style.background = 'transparent';
-    el.style.backgroundColor = 'transparent';
-  });
-}
-</script>
-{% end %}
+    <!-- Enhanced JavaScript for Animations -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Staggered animation for dashboard cards
+        const cards = document.querySelectorAll('.dashboard-card, .stats-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Enhanced hover effects for event cards
+        const eventCards = document.querySelectorAll('.event-card');
+        eventCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px) scale(1.01)';
+                this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Ripple effect for buttons
+        const buttons = document.querySelectorAll('.btn-enhanced');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.6);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    });
+
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .dashboard-card, .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+        }
+        
+        .welcome-gradient {
+            background: linear-gradient(135deg, #D67253 0%, #C5634A 25%, #B85441 50%, #A64938 75%, #943E2F 100%);
+            position: relative;
+        }
+        
+        .event-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    `;
+    document.head.appendChild(style);
+    </script>
+</body>
+</html>
