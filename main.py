@@ -47,7 +47,10 @@ def make_app():
     )
 
 if __name__ == "__main__":
+    # Only run the Tornado server locally
+    port = int(os.environ.get("PORT", 5000))
     app = make_app()
-    app.listen(5000, address="0.0.0.0")
-    print("EventStack server starting on http://localhost:5000")
+    app.listen(port, address="0.0.0.0")
+    print(f"EventStack server running on http://localhost:{port}")
     tornado.ioloop.IOLoop.current().start()
+
