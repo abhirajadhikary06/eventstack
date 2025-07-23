@@ -41,4 +41,4 @@ htmlcov/
 .coverage
 .coverage.*
 coverage.xml
-coverage.json
+coverage.jsonvenv/
