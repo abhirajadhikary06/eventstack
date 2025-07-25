@@ -1,8 +1,13 @@
 import sqlite3
 import os
 from datetime import datetime
-from dotenv import load_dotenv
-load_dotenv()
+
+# Try to import and load dotenv, but continue without it if not available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("Warning: python-dotenv not available, using default environment variables")
 
 def get_db_connection():
     db_path = os.environ.get('DATABASE_PATH', 'quickmeet.db')
@@ -21,6 +26,13 @@ def init_db():
     
     # Execute schema script
     conn.executescript(schema)
+    
+    # Migration for max_applicants
+    cursor.execute("PRAGMA table_info(events)")
+    columns = [col[1] for col in cursor.fetchall()]
+    if 'max_applicants' not in columns:
+        cursor.execute("ALTER TABLE events ADD COLUMN max_applicants INTEGER DEFAULT NULL")
+    conn.commit()
     
     conn.commit()
     cursor.close()
@@ -75,14 +87,14 @@ def get_user_by_github_id(github_id):
     conn.close()
     return dict(user) if user else None
 
-def create_event(event_id, title, description, location, created_by):
+def create_event(event_id, title, description, location, created_by, max_applicants=None):
     """Create a new event"""
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO events (id, title, description, location, created_by)
-        VALUES (?, ?, ?, ?, ?)
-    """, (event_id, title, description, location, created_by))
+        INSERT INTO events (id, title, description, location, max_applicants, created_by)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (event_id, title, description, location, max_applicants, created_by))
     conn.commit()
     cursor.close()
     conn.close()
@@ -246,3 +258,17 @@ def finalize_event(event_id, slot_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+def update_event(event_id, title, description, location, max_applicants):
+    """Update an existing event"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE events
+        SET title = ?, description = ?, location = ?, max_applicants = ?
+        WHERE id = ?
+    """, (title, description, location, max_applicants, event_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return get_event_by_id(event_id)

@@ -12,10 +12,62 @@
                 {% if event['description'] %}
                 <p class="text-gray-600 mb-3">{{ event['description'] }}</p>
                 {% end %}
-                {% if event['location'] %}
-                <p class="text-sm text-gray-500">
-                    <i class="fas fa-map-marker-alt mr-1"></i>{{ event['location'] }}
-                </p>
+                
+                {% if event['location'] and event['location'].strip() %}
+                <div class="text-sm text-gray-500 space-y-1">
+                    
+                    {% set loc="" %}
+                    {% set parts = event['location'].split(',') %}
+                    {% for part in parts %}
+                        {% set text = part.strip(',') %}
+                        {% if 'http' in text %}
+                            {% set http_index = text.find('http') %}
+                            {% set link = text[http_index:].strip() %}
+                            {% set location_text = text[:http_index].strip() %}
+
+                            {% if link %}
+                                {% if 'zoom' in link %}
+                                    {% set icon = 'fas fa-video' %}
+                                    {% set label = 'Zoom Meeting' %}
+                                {% elif 'meet.google.com' in link %}
+                                    {% set icon = 'fas fa-video' %}
+                                    {% set label = 'Google Meet' %}
+                                {% elif 'teams.live.com' in link %}
+                                    {% set icon = 'fas fa-video' %}
+                                    {% set label = 'Microsoft Teams Meet' %}
+                                {% else %}
+                                    {% set icon = 'fas fa-video' %}
+                                    {% set label = 'Meeting Link' %}
+                                {% end %}
+
+                                <p>
+                                    <i class="{{ icon }}"></i>
+                                    <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
+                                </p>
+                            {% end %}
+
+
+
+                            {% if location_text %}
+                                {% set loc=loc+" "+location_text %}
+                            {% end %}
+
+                        {% else %}
+                            {% set loc=loc+" "+text %}
+                        {% end %}
+                    {% end %}
+                    {%if loc !="" %}
+                    <div class="flex items-center">
+                        <p><i class="fas fa-location-dot"></i> 
+                        {{ loc }}</p>
+                    </div>
+                    {% end %}
+                </div>
+                {% end %}
+                {% if event['max_applicants'] is not none %}
+                <p class="text-sm text-gray-500 mt-2"><i class="fas fa-users mr-1"></i>Capacity: {{ event['max_applicants'] }}</p>
+                {% else %}
+                <p class="text-sm text-gray-500 mt-2"><i class="fas fa-infinity mr-1"></i>Unlimited capacity</p>
                 {% end %}
             </div>
             

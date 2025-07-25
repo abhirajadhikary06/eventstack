@@ -6,7 +6,7 @@ from models.db import (
     create_event, get_event_by_id, get_events_by_user, 
     add_time_slot, get_time_slots_by_event, vote_for_slot,
     get_votes_by_event, add_comment, get_comments_by_event,
-    finalize_event
+    finalize_event, update_event
 )
 
 class BaseAuthHandler(tornado.web.RequestHandler):
@@ -49,6 +49,10 @@ class EventCreateHandler(BaseAuthHandler):
                        error="Title and at least one time slot are required")
             return
         
+        unlimited = self.get_argument("unlimited", "off") == "on"
+        max_applicants_str = self.get_argument("max_applicants", "50")
+        max_applicants = None if unlimited else int(max_applicants_str)
+
         # Create event
         event_id = str(uuid.uuid4())
         event = create_event(
@@ -56,7 +60,8 @@ class EventCreateHandler(BaseAuthHandler):
             title=title,
             description=description,
             location=location,
-            created_by=user["id"]
+            created_by=user["id"],
+            max_applicants=max_applicants
         )
         
         # Add time slots
@@ -129,3 +134,36 @@ class EventVoteHandler(BaseAuthHandler):
         
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps({"success": result}))
+
+class EventEditHandler(BaseAuthHandler):
+    @tornado.web.authenticated
+    def get(self, event_id):
+        user = self.get_current_user()
+        event = get_event_by_id(event_id)
+        if not event or event["created_by"] != user["id"]:
+            raise tornado.web.HTTPError(403, "Not authorized")
+        self.render("edit_event.html", user=user, event=event)
+
+    @tornado.web.authenticated
+    def post(self, event_id):
+        user = self.get_current_user()
+        event = get_event_by_id(event_id)
+        if not event or event["created_by"] != user["id"]:
+            raise tornado.web.HTTPError(403, "Not authorized")
+
+        title = self.get_argument("title")
+        description = self.get_argument("description", "")
+        location = self.get_argument("location", "")
+        unlimited = self.get_argument("unlimited", "off") == "on"
+        max_applicants_str = self.get_argument("max_applicants", "50")
+        max_applicants = None if unlimited else int(max_applicants_str)
+
+        updated_event = update_event(
+            event_id=event_id,
+            title=title,
+            description=description,
+            location=location,
+            max_applicants=max_applicants
+        )
+
+        self.redirect(f"/event/{event_id}")

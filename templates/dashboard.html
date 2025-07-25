@@ -59,10 +59,56 @@
                                         <span>
                                             <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10] }}
                                         </span>
-                                        {% if event['location'] %}
-                                        <span>
-                                            <i class="fas fa-map-marker-alt mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['location'][:30] }}
-                                        </span>
+                                        {% if event['location'] and event['location'].strip() %}
+                                        <div class="text-sm text-gray-500 space-y-1">
+                                            
+                                            {% set loc="" %}
+                                            {% set parts = event['location'].split(',') %}
+                                            {% for part in parts %}
+                                                {% set text = part.strip(',') %}
+                                                {% if 'http' in text %}
+                                                    {% set http_index = text.find('http') %}
+                                                    {% set link = text[http_index:].strip() %}
+                                                    {% set location_text = text[:http_index].strip() %}
+
+                                                    {% if link %}
+                                                        {% if 'zoom' in link %}
+                                                            {% set icon = 'fas fa-video' %}
+                                                            {% set label = 'Zoom Meeting' %}
+                                                        {% elif 'meet.google.com' in link %}
+                                                            {% set icon = 'fas fa-video' %}
+                                                            {% set label = 'Google Meet' %}
+                                                        {% elif 'teams.live.com' in link %}
+                                                            {% set icon = 'fas fa-video' %}
+                                                            {% set label = 'Microsoft Teams Meet' %}
+                                                        {% else %}
+                                                            {% set icon = 'fas fa-video' %}
+                                                            {% set label = 'Meeting Link' %}
+                                                        {% end %}
+
+                                                        <p>
+                                                            <i class="{{ icon }}"></i>
+                                                            <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
+                                                        </p>
+                                                    {% end %}
+
+
+
+                                                    {% if location_text %}
+                                                        {% set loc=loc+" "+location_text %}
+                                                    {% end %}
+
+                                                {% else %}
+                                                    {% set loc=loc+" "+text %}
+                                                {% end %}
+                                            {% end %}
+                                            {%if loc !="" %}
+                                            <div class="flex items-center">
+                                                <p><i class="fas fa-location-dot"></i> 
+                                                {{ loc }}</p>
+                                            </div>
+                                            {% end %}
+                                        </div>
                                         {% end %}
                                     </div>
                                 </div>

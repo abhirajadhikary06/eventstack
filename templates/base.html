@@ -9,9 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="/static/css/custom.css" rel="stylesheet" />
+      rel="stylesheet" />
+    <link href="../static/css/custom.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="/static/images/favicon.png" />
     <script>
       tailwind.config = {
@@ -24,7 +23,6 @@
               "eventstack-orange-light": "#E08B73",
               "eventstack-bg": "#F9F6F1",
               "eventstack-bg-dark": "#F0EDE6",
-              // Keep some GitHub colors for compatibility
               github: "#24292e",
               "github-blue": "#0366d6",
               "github-green": "#28a745",
@@ -33,67 +31,65 @@
           },
         },
       };
-      tailwind.plugins = function ({ addVariant }) {
-        addVariant("placeholder", "&::placeholder");
-        addVariant("dark-placeholder", ".dark-mode &::placeholder");
-      };
     </script>
   </head>
-  <body class="bg-eventstack-bg min-h-screen">
+  <body
+    class="bg-eventstack-bg dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav
+      class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
             <a href="/" class="flex items-center space-x-3 group">
               <!-- Logo image -->
               <div
-                class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200"
-              >
+                class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
                 <img
                   src="/static/images/image 3.png"
                   alt="EventStack Logo"
-                  class="w-full h-full object-contain"
-                />
+                  class="w-full h-full object-contain" />
               </div>
             </a>
           </div>
-
           <div class="flex items-center space-x-4">
             {% if user %}
             <a
               href="/create"
-              class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium"
-            >
+              class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-200">
               <i class="fas fa-plus mr-2"></i>New Event
             </a>
             <div class="flex items-center space-x-3">
+              <!-- Username and avatar with hover -->
               <a
                 href="/dashboard"
-                class="flex items-center space-x-2 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors duration-200"
-              >
+                class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black px-3 py-2 rounded-lg transition duration-200">
                 <img
                   src="{{ user['avatar_url'] }}"
                   alt="Avatar"
-                  class="w-8 h-8 rounded-full border-2 border-eventstack-orange"
-                />
-                <span class="text-gray-700 font-medium"
-                  >{{ user['username'] }}</span
-                >
+                  class="w-8 h-8 rounded-full border-2 border-eventstack-orange" />
+                <span
+                  class="text-gray-700 dark:text-gray-300 font-medium group-hover:text-black dark:group-hover:text-white username-span">
+                  {{ user['username'] }}
+                </span>
               </a>
-              <a
-                href="/logout"
-                class="text-gray-500 hover:text-red-600 p-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                title="Sign out"
-              >
-                <i class="fas fa-sign-out-alt"></i>
-              </a>
+              <!-- Logout icon with tooltip To right  -->
+              <div class="relative group">
+                <a
+                  href="/logout"
+                  class="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                  <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <span
+                  class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:inline-block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 shadow-md transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                  Sign out
+                </span>
+              </div>
             </div>
             {% else %}
             <a
               href="/login"
-              class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
-            >
+              class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
               <i class="fab fa-github mr-2"></i>Sign in with GitHub
             </a>
             {% end %}
@@ -101,49 +97,40 @@
         </div>
       </div>
     </nav>
-
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {% block content %}{% end %}
     </main>
-
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-auto">
+    <footer
+      class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div
-          class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0"
-        >
+          class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <div class="flex items-center space-x-3">
             <img
               src="/static/images/image 3.png"
               alt="EventStack Logo"
-              class="w-12 h-12 object-contain"
-            />
+              class="w-12 h-12 object-contain" />
           </div>
-          <div class="text-center text-gray-500 text-sm">
+          <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>&copy; 2025 EventStack. Built with Tornado.</p>
           </div>
-          <div class="flex items-center space-x-3 text-xs text-gray-500">
+          <div
+            class="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400">
             <a
               href="/about"
-              class="hover:text-eventstack-orange transition-colors"
-              >About</a
-            >
+              class="hover:text-eventstack-orange transition-colors">About</a>
             <a
               href="/privacy"
-              class="hover:text-eventstack-orange transition-colors"
-              >Privacy</a
-            >
+              class="hover:text-eventstack-orange transition-colors">Privacy</a>
             <a
               href="/support"
-              class="hover:text-eventstack-orange transition-colors"
-              >Support</a
-            >
+              class="hover:text-eventstack-orange transition-colors">Support</a>
             <a
               href="https://github.com/abhirajadhikary06/eventstack" target="_blank" rel="noopener noreferrer"
               class="flex items-center space-x-1 hover:text-eventstack-orange transition-colors"
-              title="GitHub"
-            >
+              title="GitHub">
               <i class="fab fa-github"></i>
               <span>GitHub</span>
             </a>
@@ -151,7 +138,6 @@
         </div>
       </div>
     </footer>
-
     <script src="/static/js/app.js"></script>
     {% block scripts %}{% end %}
   </body>

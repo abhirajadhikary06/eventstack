@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS events (
     title TEXT NOT NULL,
     description TEXT,
     location TEXT,
+    max_applicants INTEGER DEFAULT NULL,
     created_by INTEGER NOT NULL,
     is_finalized BOOLEAN DEFAULT 0,
     finalized_slot_id INTEGER,

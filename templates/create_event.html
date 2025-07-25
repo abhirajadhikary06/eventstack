@@ -67,6 +67,30 @@
                            placeholder="Conference Room A / Zoom Link / etc.">
                 </div>
 
+                <!-- Maximum Applicants -->
+                <div>
+                    <label for="max_applicants" class="block text-sm font-medium text-gray-700 mb-2">
+                        Maximum Applicants
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        <select id="max_applicants" name="max_applicants" class="w-full max-w-xs px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                        </select>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="unlimited" name="unlimited" class="mr-2">
+                            <label for="unlimited">No limit</label>
+                        </div>
+                    </div>
+                    <p id="unlimited-warning" class="text-sm text-yellow-600 mt-2 hidden">Be aware of resource management for unlimited events.</p>
+                </div>
+
                 <!-- Time Slots -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -133,6 +157,20 @@ function removeTimeSlot(button) {
     if (timeSlots.length > 1) {
         button.parentElement.remove();
     }
+}
+
+const unlimitedCheckbox = document.getElementById('unlimited');
+const maxSelect = document.getElementById('max_applicants');
+const warning = document.getElementById('unlimited-warning');
+
+unlimitedCheckbox.addEventListener('change', () => {
+    maxSelect.disabled = unlimitedCheckbox.checked;
+    warning.classList.toggle('hidden', !unlimitedCheckbox.checked);
+});
+
+if (unlimitedCheckbox.checked) {
+    maxSelect.disabled = true;
+    warning.classList.remove('hidden');
 }
 </script>
 {% end %}
