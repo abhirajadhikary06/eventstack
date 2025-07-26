@@ -1128,3 +1128,88 @@ input[type="datetime-local"] {
 .dark-mode .group:hover .username-span {
   color: #111 !important;
 }
+/* ADDING THESE STYLES FOR THE NEW LANDING PAGE */
+
+body, html {
+    height: 100%;
+}
+
+.content {
+    flex: 1 0 auto;
+}
+
+.hero {
+    background-color: #f8f9fa;
+    padding: 4rem 0;
+    margin-top: -24px; /* Counteract the container's mt-4 */
+    margin-left: -12px; /* Counteract container padding */
+    margin-right: -12px; /* Counteract container padding */
+    width: calc(100% + 24px);
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.hero p.lead {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.features {
+    background-color: #ffffff;
+}
+
+.feature-card {
+    padding: 2rem;
+    border: 1px solid #e9ecef;
+    border-radius: .5rem;
+    background: #fff;
+    transition: box-shadow .3s ease-in-out;
+}
+
+.feature-card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.feature-card img {
+    max-height: 150px;
+    margin-bottom: 1rem;
+}
+
+.footer-dark {
+    background-color: #343a40;
+    color: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.footer-dark a {
+    color: #f8f9fa;
+    text-decoration: none;
+}
+
+.footer-dark a:hover {
+    text-decoration: underline;
+}
+
+.footer-dark .text-muted {
+    color: #adb5bd !important; /* Override bootstrap */
+}
+
+
+.social-icons a {
+    color: #f8f9fa;
+    margin: 0 10px;
+    font-size: 1.5rem;
+}
+
+.social-icons a:hover {
+    color: #0d6efd; /* Bootstrap primary color */
+}
+
+/* Adjustments for base layout */
+.container.mt-4 {
+    padding-left: 12px;
+    padding-right: 12px;
+}
