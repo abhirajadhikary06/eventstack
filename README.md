@@ -15,9 +15,25 @@
 **EventStack** is a modern platform designed to make event planning and coordination effortless. Whether you're organizing team meetings, social hangouts, or community events, EventStack helps you find the perfect time that works for everyone.
 
 ---
-## ⭐ Star this repository!
 
-[![GitHub stars](https://img.shields.io/github/stars/abhirajadhikary06/eventstack?style=social)](https://github.com/abhirajadhikary06/eventstack/stargazers)
+### 🔭 Show your support
+
+If you like this project, consider starring it!
+
+<p align="center">
+  <a href="https://github.com/abhirajadhikary06/eventstack/stargazers">
+    <img src="https://img.shields.io/github/stars/abhirajadhikary06/eventstack?style=social" alt="GitHub Repo stars">
+  </a>
+</p>
+
+You can also see the amazing contributors:
+  
+<p align="center">
+  <a href="https://github.com/abhirajadhikary06/eventstack/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=abhirajadhikary06/eventstack" />
+  </a>
+</p>
+
 
 ---
 ## Features

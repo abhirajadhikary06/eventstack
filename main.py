@@ -1,67 +1,54 @@
-from dotenv import load_dotenv
-load_dotenv()
 
 import os
 import tornado.ioloop
 import tornado.web
-import tornado.websocket
-import sqlite3
-import json
-from handlers.auth import GitHubAuthHandler, LoginHandler, LogoutHandler
-from handlers.events import EventCreateHandler, EventViewHandler, EventVoteHandler, DashboardHandler, EventEditHandler
-from handlers.websocket import VoteWebSocketHandler
-from handlers.info import AboutHandler, PrivacyHandler, SupportHandler
-from models.db import init_db
-
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        user_cookie = self.get_secure_cookie("user")
-        user = None
-        if user_cookie:
-            try:
-                user = json.loads(user_cookie)
-                self.redirect("/dashboard")
-                return
-            except:
-                pass
-        
-        self.render("index.html", user=user)
+import tornado.httpserver
+import tornado.log
+from auth import LoginHandler, GitHubAuthHandler, LogoutHandler
+from events import (
+    DashboardHandler, EventCreateHandler, EventViewHandler,
+    EventVoteHandler, EventEditHandler, ContactHandler
+)
+from info import AboutHandler, PrivacyHandler, SupportHandler
+from websocket import VoteWebSocketHandler
 
 def make_app():
-    # Initialize database
-    init_db()
-    
+    settings = {
+        "cookie_secret": os.environ.get("COOKIE_SECRET", "super-secret-key"),
+        "login_url": "/login",
+        "template_path": os.path.join(os.path.dirname(__file__), "templates"),
+        "static_path": os.path.join(os.path.dirname(__file__), "static"),
+        "xsrf_cookies": True,
+        "debug": True,
+    }
+
     return tornado.web.Application([
-        (r"/", MainHandler),
+        (r"/", LoginHandler),
         (r"/login", LoginHandler),
-        (r"/auth/github", GitHubAuthHandler),
-        (r"/complete/github/?", GitHubAuthHandler),
         (r"/logout", LogoutHandler),
+        (r"/complete/github", GitHubAuthHandler),
         (r"/dashboard", DashboardHandler),
         (r"/create", EventCreateHandler),
-        (r"/event/([^/]+)", EventViewHandler),
-        (r"/event/([^/]+)/edit", EventEditHandler),
-        (r"/api/vote", EventVoteHandler),
-        (r"/ws/vote/([^/]+)", VoteWebSocketHandler),
+        (r"/event/([a-zA-Z0-9\-]+)", EventViewHandler),
+        (r"/vote", EventVoteHandler),
+        (r"/event/([a-zA-Z0-9\-]+)/edit", EventEditHandler),
+
+        # Informational Pages
         (r"/about", AboutHandler),
         (r"/privacy", PrivacyHandler),
         (r"/support", SupportHandler),
-    ], 
-    template_path=os.path.join(os.path.dirname(__file__), "templates"),
-    static_path=os.path.join(os.path.dirname(__file__), "static"),
-    cookie_secret=os.getenv("COOKIE_SECRET", "your-secret-key-change-in-production"),
-    login_url="/login",
-    debug=True
-    )
+
+        # Contact Page
+        (r"/contact", ContactHandler),
+
+        # WebSocket route
+        (r"/ws/vote/([a-zA-Z0-9\-]+)", VoteWebSocketHandler),
+    ], **settings)
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description='Run the EventStack server')
-    parser.add_argument('--port', type=int, default=5000, help='Port to run the server on')
-    args = parser.parse_args()
-    
+    port = int(os.environ.get("PORT", 8888))
     app = make_app()
-    app.listen(args.port, address="0.0.0.0")
-    print(f"EventStack server starting on http://localhost:{args.port}")
+    server = tornado.httpserver.HTTPServer(app)
+    server.listen(port)
+    print(f"Server running at http://localhost:{port}")
     tornado.ioloop.IOLoop.current().start()
-
