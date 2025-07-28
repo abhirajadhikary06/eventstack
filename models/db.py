@@ -9,6 +9,11 @@ try:
 except ImportError:
     print("Warning: python-dotenv not available, using default environment variables")
 
+# empty function for now
+# add the functionalities
+def get_upcoming_events():
+    return
+
 def get_db_connection():
     db_path = os.environ.get('DATABASE_PATH', 'quickmeet.db')
     conn = sqlite3.connect(db_path)
