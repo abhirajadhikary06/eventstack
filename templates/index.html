@@ -1,58 +1,54 @@
 {% extends "base.html" %}
 
+{% block title %}Welcome to EventStack{% endblock %}
+
 {% block content %}
-<div class="text-center">
-    <!-- Hero Section -->
-    <div class="max-w-4xl mx-auto">
-        <div class="mb-12">
-            <!-- Large starburst hero logo -->
-            <img src="/static/images/image 2.png" alt="EventStack Hero Starburst" width="357" height="149" class="mx-auto mb-6" />
-            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight mt-6" style="margin-top: 50px; margin-bottom: 50px;">
-                Schedule Smarter,<br>
-                <span class="text-gray-900" style="margin-top: 20px;">Vote Faster</span>
-            </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Create events, propose time slots, and let participants vote for their preferred times. 
-                Real-time updates keep everyone in sync.
-            </p>
-        </div>
+<div class="hero text-center">
+    <div class="container">
+        <h1 class="display-4">EventStack</h1>
+        <p class="lead">Your All-in-One Event Management Solution</p>
+        <p>Host, manage, and join events with ease.</p>
+        <p>
+            <a href="{{ url_for('login_page') }}" class="btn btn-primary my-2">Get Started</a>
+            <a href="{{ url_for('about') }}" class="btn btn-secondary my-2">Learn More</a>
+        </p>
+    </div>
+</div>
 
-        <!-- Features Grid -->
-        <div class="grid md:grid-cols-3 gap-8 mb-16">
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="w-16 h-16 mx-auto mb-4 bg-eventstack-bg rounded-full flex items-center justify-center">
-                    <i class="fab fa-github text-3xl feature-icon" style="color:#111 !important;"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-gray-900">GitHub Integration</h3>
-                <p class="text-gray-600 leading-relaxed">Sign in with your GitHub account. No new passwords to remember.</p>
-            </div>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="w-16 h-16 mx-auto mb-4 bg-eventstack-bg rounded-full flex items-center justify-center">
-                    <i class="fas fa-vote-yea text-3xl feature-icon" style="color:#111 !important;"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-gray-900">Real-time Voting</h3>
-                <p class="text-gray-600 leading-relaxed">See votes update instantly as participants make their choices.</p>
-            </div>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="w-16 h-16 mx-auto mb-4 bg-eventstack-bg rounded-full flex items-center justify-center">
-                    <i class="fas fa-mobile-alt text-3xl feature-icon" style="color:#111 !important;"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-gray-900">Mobile Friendly</h3>
-                <p class="text-gray-600 leading-relaxed">Fully responsive design works perfectly on all devices.</p>
-            </div>
+<div id="features" class="features py-5">
+    <div class="container">
+        <div class="row text-center">
+            <h2 class="pb-2 border-bottom">Features</h2>
         </div>
-
-        <!-- CTA Section -->
-        <div class="">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Ready to get started?</h2>
-            <p class="text-gray-600 mb-8 text-lg">Sign in with GitHub to create your first event.</p>
-            <a href="/login" class="inline-flex items-center bg-gray-900 text-white px-8 py-4 rounded-xl hover:bg-gray-800 transition-all duration-200 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
-                <i class="fab fa-github mr-3 text-xl"></i>
-                Sign in with GitHub
-            </a>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+            <div class="col d-flex align-items-start">
+                <div class="feature-card text-center">
+                    <div class="mb-3">
+                        <img src="{{ url_for('static', path='/images/image 1.png') }}" alt="Create Events" class="img-fluid">
+                    </div>
+                    <h3 class="fs-2">Create Events</h3>
+                    <p>Easily create and customize events with our intuitive interface. Set dates, locations, and details in minutes.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <div class="feature-card text-center">
+                    <div class="mb-3">
+                        <img src="{{ url_for('static', path='/images/image 2.png') }}" alt="Manage Attendees" class="img-fluid">
+                    </div>
+                    <h3 class="fs-2">Manage Attendees</h3>
+                    <p>Keep track of your attendees, manage registrations, and communicate with them effectively.</p>
+                </div>
+            </div>
+            <div class="col d-flex align-items-start">
+                <div class="feature-card text-center">
+                    <div class="mb-3">
+                        <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="Real-time Notifications" class="img-fluid">
+                    </div>
+                    <h3 class="fs-2">Real-time Notifications</h3>
+                    <p>Stay updated with real-time notifications for new registrations, event updates, and messages.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% end %}
+{% endblock %}

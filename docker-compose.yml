@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  eventstack:
+    build: .
+    ports:
+      - "5050:5050"
+    environment:
+      - COOKIE_SECRET=your-secret-key-change-in-production
+    volumes:
+      - .:/app
+    restart: unless-stopped

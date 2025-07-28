@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}EventStack - Schedule Smarter, Vote Faster{% end %}
-    </title>
+    <title>{% block title %}EventStack - Schedule Smarter, Vote Faster{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="/static/css/custom.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+      rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/custom.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/favicon.png') }}" />
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -24,7 +21,6 @@
               "eventstack-orange-light": "#E08B73",
               "eventstack-bg": "#F9F6F1",
               "eventstack-bg-dark": "#F0EDE6",
-              // Keep some GitHub colors for compatibility
               github: "#24292e",
               "github-blue": "#0366d6",
               "github-green": "#28a745",
@@ -33,118 +29,134 @@
           },
         },
       };
-      tailwind.plugins = function ({ addVariant }) {
-        addVariant("placeholder", "&::placeholder");
-        addVariant("dark-placeholder", ".dark-mode &::placeholder");
-      };
     </script>
   </head>
-  <body class="bg-eventstack-bg min-h-screen">
+  <body class="bg-eventstack-bg dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
             <a href="/" class="flex items-center space-x-3 group">
-              <!-- Logo image -->
-              <div
-                class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200"
-              >
-                <img
-                  src="/static/images/image 3.png"
-                  alt="EventStack Logo"
-                  class="w-full h-full object-contain"
-                />
+              <div class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
+                <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="EventStack Logo" class="w-full h-full object-contain" />
               </div>
             </a>
           </div>
-
           <div class="flex items-center space-x-4">
             {% if user %}
-            <a
-              href="/create"
-              class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium"
-            >
+            <!-- 🔔 Notification bell -->
+            <div class="relative">
+              <button id="notificationButton" class="relative p-2 text-gray-400 hover:text-eventstack-orange focus:outline-none">
+                <i class="fas fa-bell text-xl"></i>
+                {% if upcoming_events and upcoming_events|length > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {{ upcoming_events|length }}
+                </span>
+                {% endif %}
+              </button>
+              <div id="notificationDropdown" class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-50 hidden">
+                <div class="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">
+                  Upcoming Events
+                </div>
+                <ul class="max-h-60 overflow-y-auto">
+                  {% if upcoming_events %}
+                  {% for event in upcoming_events %}
+                  <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <div class="text-sm font-semibold text-eventstack-orange">{{ event.title }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ event.start_time.strftime('%b %d, %Y %I:%M %p') }}
+                    </div>
+                  </li>
+                  {% endfor %}
+                  {% else %}
+                  <li class="px-4 py-2 text-sm text-gray-500">No upcoming events</li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+
+            <a href="/create" class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-200">
               <i class="fas fa-plus mr-2"></i>New Event
             </a>
             <div class="flex items-center space-x-3">
-              <a
-                href="/dashboard"
-                class="flex items-center space-x-2 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors duration-200"
-              >
-                <img
-                  src="{{ user['avatar_url'] }}"
-                  alt="Avatar"
-                  class="w-8 h-8 rounded-full border-2 border-eventstack-orange"
-                />
-                <span class="text-gray-700 font-medium"
-                  >{{ user['username'] }}</span
-                >
+              <a href="/dashboard" class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black px-3 py-2 rounded-lg transition duration-200">
+                <img src="{{ user['avatar_url'] }}" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-eventstack-orange" />
+                <span class="text-gray-700 dark:text-gray-300 font-medium group-hover:text-black dark:group-hover:text-white username-span">{{ user['username'] }}</span>
               </a>
-              <a
-                href="/logout"
-                class="text-gray-500 hover:text-red-600 p-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                title="Sign out"
-              >
-                <i class="fas fa-sign-out-alt"></i>
-              </a>
+              <div class="relative group">
+                <a href="/logout" class="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                  <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <span class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:inline-block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 shadow-md transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                  Sign out
+                </span>
+              </div>
             </div>
             {% else %}
-            <a
-              href="/login"
-              class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
-            >
-              <i class="fab fa-github mr-2"></i>Sign in with GitHub
-            </a>
-            {% end %}
+            <a class="btn btn-primary" href="{{ url_for('login_page') }}">Login</a>
+            {% endif %}
           </div>
         </div>
       </div>
     </nav>
 
+    <!-- Flash Messages -->
+    <div class="container mt-4">
+      {% with messages = request.session.pop('flash_messages', []) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {% block content %}{% end %}
+      {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-auto">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div
-          class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0"
-        >
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <div class="flex items-center space-x-3">
-            <img
-              src="/static/images/image 3.png"
-              alt="EventStack Logo"
-              class="w-12 h-12 object-contain"
-            />
+            <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="EventStack Logo" class="w-12 h-12 object-contain" />
           </div>
-          <div class="text-center text-gray-500 text-sm">
+          <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>&copy; 2025 EventStack. Built with Tornado.</p>
           </div>
-          <div class="flex items-center space-x-3 text-xs text-gray-500">
-            <a
-              href="/about"
-              class="hover:text-eventstack-orange transition-colors"
-              >About</a
-            >
-            <a
-              href="/privacy"
-              class="hover:text-eventstack-orange transition-colors"
-              >Privacy</a
-            >
-            <a
-              href="/support"
-              class="hover:text-eventstack-orange transition-colors"
-              >Support</a
-            >
+          <div class="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400">
+            <a href="/about" class="hover:text-eventstack-orange transition-colors">About</a>
+            <a href="/privacy" class="hover:text-eventstack-orange transition-colors">Privacy</a>
+            <a href="/support" class="hover:text-eventstack-orange transition-colors">Support</a>
+            <a href="/contact" class="hover:text-eventstack-orange transition-colors">Contact</a>
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-1 hover:text-eventstack-orange transition-colors" title="GitHub">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
           </div>
         </div>
       </div>
     </footer>
 
-    <script src="/static/js/app.js"></script>
-    {% block scripts %}{% end %}
+    <!-- Scripts -->
+    <script>
+      document.getElementById("notificationButton")?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("notificationDropdown");
+        dropdown?.classList.toggle("hidden");
+      });
+      document.addEventListener("click", function () {
+        document.getElementById("notificationDropdown")?.classList.add("hidden");
+      });
+    </script>
+    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
   </body>
 </html>
+
