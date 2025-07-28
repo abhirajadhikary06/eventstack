@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Contact Us{% end %}
+{% block content %}
+<div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow">
+  <h1 class="text-2xl font-bold mb-4">Contact Us</h1>
+  {% if success %}
+    <p class="text-green-600 mb-4">{{ success }}</p>
+  {% endif %}
+  <form method="POST" action="/contact">
+    <div class="mb-4">
+      <label class="block font-medium">Name</label>
+      <input name="name" type="text" class="w-full border px-4 py-2 rounded" required />
+    </div>
+    <div class="mb-4">
+      <label class="block font-medium">Email</label>
+      <input name="email" type="email" class="w-full border px-4 py-2 rounded" required />
+    </div>
+    <div class="mb-4">
+      <label class="block font-medium">Subject</label>
+      <input name="subject" type="text" class="w-full border px-4 py-2 rounded" required />
+    </div>
+    <div class="mb-4">
+      <label class="block font-medium">Type</label>
+      <select name="type" class="w-full border px-4 py-2 rounded">
+        <option>Feedback</option>
+        <option>Bug Report</option>
+        <option>Feature Request</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block font-medium">Message</label>
+      <textarea name="message" rows="5" class="w-full border px-4 py-2 rounded" required></textarea>
+    </div>
+    <button type="submit" class="bg-eventstack-orange text-white px-6 py-2 rounded hover:bg-eventstack-orange-dark">
+      Send Message
+    </button>
+  </form>
+</div>
+{% end %}

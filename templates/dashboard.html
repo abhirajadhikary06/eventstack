@@ -195,14 +195,52 @@
         </div>
     </div>
 
-    <!-- Activity Summary -->
-    <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-        <h2 class="text-xl font-semibold mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
-            <i class="fas fa-chart-bar mr-2"></i>Activity Summary
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">{{ len(created_events) }}</div>
+    
+<!-- Enhanced Activity Summary -->
+<div class="bg-white rounded-2xl shadow-xl p-8 mt-10">
+  <h2 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
+    <i class="fas fa-chart-bar text-blue-600 text-xl"></i>
+    Activity Summary
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Card 1 -->
+    <div class="bg-gradient-to-br from-blue-100 to-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300">
+      <div class="flex justify-center items-center text-blue-600 mb-3 text-3xl">
+        <i class="fas fa-calendar-plus"></i>
+      </div>
+      <div class="text-3xl font-extrabold text-gray-800">{{ len(created_events) }}</div>
+      <div class="text-sm text-gray-500 mt-1">Events Created</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-gradient-to-br from-green-100 to-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300">
+      <div class="flex justify-center items-center text-green-600 mb-3 text-3xl">
+        <i class="fas fa-vote-yea"></i>
+      </div>
+      <div class="text-3xl font-extrabold text-gray-800">{{ len(participated_events) }}</div>
+      <div class="text-sm text-gray-500 mt-1">Events Participated</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-gradient-to-br from-purple-100 to-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300">
+      <div class="flex justify-center items-center text-purple-600 mb-3 text-3xl">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="text-3xl font-extrabold text-gray-800">{{ len([e for e in created_events if e['is_finalized']]) }}</div>
+      <div class="text-sm text-gray-500 mt-1">Events Finalized</div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-gradient-to-br from-yellow-100 to-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-all duration-300">
+      <div class="flex justify-center items-center text-yellow-600 mb-3 text-3xl">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="text-3xl font-extrabold text-gray-800">{{ len([e for e in created_events if not e['is_finalized']]) }}</div>
+      <div class="text-sm text-gray-500 mt-1">Active Events</div>
+    </div>
+  </div>
+</div>
+
                 <div class="text-sm text-gray-600">Events Created</div>
             </div>
             <div class="text-center">
