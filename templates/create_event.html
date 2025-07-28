@@ -1,176 +1,210 @@
-{% extends "base.html" %}
-
-{% block title %}Create Event - EventStack{% end %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Create Event - EventStack{% end %} {%
+block content %}
 <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-8">
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-github mb-2">Create New Event</h1>
-            <p class="text-gray-600">Set up your event and propose time slots for participants to vote on.</p>
-        </div>
-
-        {% if locals().get('error') %}
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-            {{ error }}
-        </div>
-        {% end %}
-
-        <form method="post" id="createEventForm">
-            <!-- Event Details -->
-            <div class="space-y-6">
-                <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                        Event Title <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" 
-                           id="title" 
-                           name="title" 
-                           required
-                           
-                            class="w-full px-3 py-2 border rounded-md 
-                                    bg-white text-black 
-                                    dark:bg-eventstack-bg-dark dark:text-white 
-                                    placeholder-gray-500 dark:placeholder-black 
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="Team Standup Meeting">
-                </div>
-
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Description
-                    </label>
-                    <textarea id="description" 
-                              name="description" 
-                              rows="3"
-                              class="w-full px-3 py-2 border rounded-md 
-                                   bg-white text-black 
-                                    dark:bg-eventstack-bg-dark dark:text-white 
-                                    placeholder-gray-500 dark:placeholder-black 
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Brief description of the event..."></textarea>
-                </div>
-
-                <div>
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-                        Location
-                    </label>
-                    <input type="text" 
-                           id="location" 
-                           name="location"
-                           class="w-full px-3 py-2 border rounded-md 
-                                bg-white text-black 
-                             dark:bg-eventstack-bg-dark dark:text-white 
-                             placeholder-gray-500 dark:placeholder-black 
-                            focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="Conference Room A / Zoom Link / etc.">
-                </div>
-
-                <!-- Maximum Applicants -->
-                <div>
-                    <label for="max_applicants" class="block text-sm font-medium text-gray-700 mb-2">
-                        Maximum Applicants
-                    </label>
-                    <div class="flex items-center space-x-4">
-                        <select id="max_applicants" name="max_applicants" class="w-full max-w-xs px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50" selected>50</option>
-                            <option value="100">100</option>
-                            <option value="250">250</option>
-                            <option value="500">500</option>
-                            <option value="1000">1000</option>
-                        </select>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="unlimited" name="unlimited" class="mr-2">
-                            <label for="unlimited">No limit</label>
-                        </div>
-                    </div>
-                    <p id="unlimited-warning" class="text-sm text-yellow-600 mt-2 hidden">Be aware of resource management for unlimited events.</p>
-                </div>
-
-                <!-- Time Slots -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Proposed Time Slots <span class="text-red-500">*</span>
-                    </label>
-                    <p class="text-sm text-gray-600 mb-3">Add multiple options for participants to choose from.</p>
-                    
-                    <div id="timeSlots" class="space-y-3">
-                        <div class="flex items-center space-x-2 time-slot-input">
-                            <input type="datetime-local" 
-                                   name="time_slots" 
-                                   required
-                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-white text-black 
-                                        dark:bg-eventstack-bg-dark dark:text-white 
-                                        placeholder-gray-500 dark:placeholder-black 
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <button type="button" onclick="removeTimeSlot(this)" class="px-2" style="color: #D67253;"></button>
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <button type="button" 
-                            onclick="addTimeSlot()" 
-                            class="mt-3 text-github-black hover:text-blue-800 text-sm">
-                        <i class="fas fa-plus mr-1"></i>Add another time slot
-                    </button>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
-                <a href="/dashboard" class="text-gray-600 hover:text-gray-800">
-                    <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
-                </a>
-                <button type="submit" 
-                        class="bg-github text-white px-6 py-2 rounded-md hover:bg-gray-900 transition-colors">
-                    <i class="fas fa-calendar-plus mr-2"></i>Create Event
-                </button>
-            </div>
-        </form>
+  <div class="bg-white rounded-lg shadow-md p-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-github mb-2">Create New Event</h1>
+      <p class="text-gray-600">
+        Set up your event and propose time slots for participants to vote on.
+      </p>
     </div>
+
+    {% if locals().get('error') %}
+    <div
+      class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6"
+    >
+      <i class="fas fa-exclamation-triangle mr-2"></i>
+      {{ error }}
+    </div>
+    {% end %}
+
+    <form method="post" id="createEventForm">
+      <!-- Event Details -->
+      <div class="space-y-6">
+        <div>
+          <label
+            for="title"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Event Title <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="w-full px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white placeholder-gray-500 dark:placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Team Standup Meeting"
+          />
+        </div>
+
+        <div>
+          <label
+            for="description"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows="3"
+            class="w-full px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white placeholder-gray-500 dark:placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Brief description of the event..."
+          ></textarea>
+        </div>
+
+        <div>
+          <label
+            for="location"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Location
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="w-full px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white placeholder-gray-500 dark:placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Conference Room A / Zoom Link / etc."
+          />
+        </div>
+
+        <!-- Maximum Applicants -->
+        <div>
+          <label
+            for="max_applicants"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Maximum Applicants
+          </label>
+          <div class="flex items-center space-x-4">
+            <select
+              id="max_applicants"
+              name="max_applicants"
+              class="w-full max-w-xs px-3 py-2 border rounded-md bg-white text-black dark:bg-eventstack-bg-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="50" selected>50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                id="unlimited"
+                name="unlimited"
+                class="mr-2"
+              />
+              <label for="unlimited">No limit</label>
+            </div>
+          </div>
+          <p id="unlimited-warning" class="text-sm text-yellow-600 mt-2 hidden">
+            Be aware of resource management for unlimited events.
+          </p>
+        </div>
+
+        <!-- Time Slots -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Proposed Date and Time Slots <span class="text-red-500">*</span>
+          </label>
+          <p class="text-sm text-gray-600 mb-3">
+            Add multiple options for participants to choose from.
+          </p>
+
+          <div id="timeSlots" class="space-y-3">
+            <div class="flex items-center space-x-2 time-slot-input">
+              <input
+                type="datetime-local"
+                name="time_slots"
+                required
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-white text-black dark:bg-gray-800 dark:text-white dark:[color-scheme:light] [color-scheme:dark] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                onclick="removeTimeSlot(this)"
+                class="px-2"
+                style="color: #d67253"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onclick="addTimeSlot()"
+            class="mt-3 text-github-black hover:text-blue-800 text-sm"
+          >
+            <i class="fas fa-plus mr-1"></i>Add another date and time slot
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div
+        class="flex items-center justify-between pt-6 border-t border-gray-200 mt-8"
+      >
+        <a href="/dashboard" class="text-gray-600 hover:text-gray-800">
+          <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
+        </a>
+        <button
+          type="submit"
+          class="bg-github text-white px-6 py-2 rounded-md hover:bg-gray-900 transition-colors"
+        >
+          <i class="fas fa-calendar-plus mr-2"></i>Create Event
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
-function addTimeSlot() {
-    const timeSlotsContainer = document.getElementById('timeSlots');
-    const newSlot = document.createElement('div');
-    newSlot.className = 'flex items-center space-x-2 time-slot-input';
+  function addTimeSlot() {
+    const timeSlotsContainer = document.getElementById("timeSlots");
+    const newSlot = document.createElement("div");
+    newSlot.className = "flex items-center space-x-2 time-slot-input";
     newSlot.innerHTML = `
-        <input type="datetime-local" 
-               name="time_slots" 
-               required
-               class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-github-blue focus:border-transparent">
-        <button type="button" onclick="removeTimeSlot(this)" class="px-2" style="color: #D67253;">
-            <i class="fas fa-trash"></i>
-        </button>
+      <input type="datetime-local" 
+             name="time_slots" 
+             required
+             class="flex-1 px-3 py-2 border border-gray-300 rounded-md 
+                    bg-white text-black 
+                    dark:bg-gray-800 dark:text-white 
+                    dark:[color-scheme:light] 
+                    [color-scheme:dark] 
+                    focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button type="button" onclick="removeTimeSlot(this)" class="px-2" style="color:  #d67253">
+          <i class="fas fa-trash"></i>
+      </button>
     `;
     timeSlotsContainer.appendChild(newSlot);
-}
+  }
 
-function removeTimeSlot(button) {
-    const timeSlots = document.querySelectorAll('.time-slot-input');
+  function removeTimeSlot(button) {
+    const timeSlots = document.querySelectorAll(".time-slot-input");
     if (timeSlots.length > 1) {
-        button.parentElement.remove();
+      button.parentElement.remove();
     }
-}
+  }
 
-const unlimitedCheckbox = document.getElementById('unlimited');
-const maxSelect = document.getElementById('max_applicants');
-const warning = document.getElementById('unlimited-warning');
+  const unlimitedCheckbox = document.getElementById("unlimited");
+  const maxSelect = document.getElementById("max_applicants");
+  const warning = document.getElementById("unlimited-warning");
 
-unlimitedCheckbox.addEventListener('change', () => {
+  unlimitedCheckbox.addEventListener("change", () => {
     maxSelect.disabled = unlimitedCheckbox.checked;
-    warning.classList.toggle('hidden', !unlimitedCheckbox.checked);
-});
+    warning.classList.toggle("hidden", !unlimitedCheckbox.checked);
+  });
 
-if (unlimitedCheckbox.checked) {
+  if (unlimitedCheckbox.checked) {
     maxSelect.disabled = true;
-    warning.classList.remove('hidden');
-}
+    warning.classList.remove("hidden");
+  }
 </script>
 {% end %}
