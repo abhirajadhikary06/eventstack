@@ -10,6 +10,7 @@ from models.db import (
     get_votes_by_event, add_comment, get_comments_by_event,
     finalize_event, update_event, get_upcoming_events
 )
+from utils.flash import FlashMessages
 
 class BaseAuthHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -17,6 +18,11 @@ class BaseAuthHandler(tornado.web.RequestHandler):
         if user_cookie:
             return json.loads(user_cookie)
         return None
+    
+    def render(self, template_name, **kwargs):
+        # Add flash messages to template context
+        kwargs['flash_messages'] = FlashMessages.get_messages(self)
+        super().render(template_name, **kwargs)
 
 class DashboardHandler(BaseAuthHandler):
     @tornado.web.authenticated
@@ -25,9 +31,8 @@ class DashboardHandler(BaseAuthHandler):
         created_events = get_events_by_user(user["id"], created_by=True)
         participated_events = get_events_by_user(user["id"], created_by=False)
 
-        now = datetime.utcnow()
-        next_24h = now + timedelta(hours=24)
-        upcoming_events = get_upcoming_events(user["id"], now, next_24h)
+        # Get upcoming events (limit to 10 for dashboard)
+        upcoming_events = get_upcoming_events(limit=10)
 
         self.render("dashboard.html", 
                    user=user,
@@ -51,6 +56,7 @@ class EventCreateHandler(BaseAuthHandler):
         time_slots = self.get_arguments("time_slots")
         
         if not title or not time_slots:
+            FlashMessages.error(self, "Title and at least one time slot are required to create an event.")
             self.render("create_event.html", 
                        user=user, 
                        error="Title and at least one time slot are required")
@@ -74,6 +80,7 @@ class EventCreateHandler(BaseAuthHandler):
             if slot_datetime.strip():
                 add_time_slot(event_id, slot_datetime)
         
+        FlashMessages.success(self, f"Event '{title}' has been created successfully!")
         self.redirect(f"/event/{event_id}")
 
 class EventViewHandler(BaseAuthHandler):

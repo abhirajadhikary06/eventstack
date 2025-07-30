@@ -143,6 +143,30 @@ def get_events_by_user(user_id, created_by=True):
     conn.close()
     return [dict(event) for event in events]
 
+def get_upcoming_events(limit=None):
+    """Get upcoming events (non-finalized events or events with future time slots)"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    query = """
+        SELECT DISTINCT e.*, u.username as creator_username, u.avatar_url as creator_avatar
+        FROM events e
+        JOIN users u ON e.created_by = u.id
+        LEFT JOIN time_slots ts ON e.id = ts.event_id
+        WHERE (e.is_finalized = 0 OR e.is_finalized IS NULL)
+           OR (e.is_finalized = 1 AND ts.slot_datetime > datetime('now'))
+        ORDER BY e.created_at DESC
+    """
+    
+    if limit:
+        query += f" LIMIT {limit}"
+    
+    cursor.execute(query)
+    events = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [dict(event) for event in events]
+
 def add_time_slot(event_id, slot_datetime):
     """Add a time slot to an event"""
     conn = get_db_connection()
