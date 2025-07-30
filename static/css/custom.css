@@ -1213,3 +1213,19 @@ body, html {
     padding-left: 12px;
     padding-right: 12px;
 }
+/* Global hand cursor for interactive elements */
+a,
+button,
+input[type="submit"],
+input[type="button"],
+label,
+[role="button"],
+.clickable,
+.pointer,
+.btn,
+img,
+.fa,
+.fas,
+.fab {
+  cursor: pointer !important;
+}
