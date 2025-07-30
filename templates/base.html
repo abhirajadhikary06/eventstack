@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}EventStack - Schedule Smarter, Vote Faster{% endblock %}</title>
+    <title>{% block title %}EventStack - Schedule Smarter, Vote Faster{% end %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet" />
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/custom.css') }}" />
-    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ static_url('css/custom.css') }}" />
+    <link rel="icon" type="image/png" href="{{ static_url('images/favicon.png') }}" />
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -39,7 +39,7 @@
           <div class="flex items-center">
             <a href="/" class="flex items-center space-x-3 group">
               <div class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
-                <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="EventStack Logo" class="w-full h-full object-contain" />
+                <img src="{{ static_url('images/image 3.png') }}" alt="EventStack Logo" class="w-full h-full object-contain" />
               </div>
             </a>
           </div>
@@ -53,7 +53,7 @@
                 <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
                   {{ upcoming_events|length }}
                 </span>
-                {% endif %}
+                {% end if %}
               </button>
               <div id="notificationDropdown" class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-50 hidden">
                 <div class="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">
@@ -68,10 +68,10 @@
                       {{ event.start_time.strftime('%b %d, %Y %I:%M %p') }}
                     </div>
                   </li>
-                  {% endfor %}
+                  {% end for %}
                   {% else %}
                   <li class="px-4 py-2 text-sm text-gray-500">No upcoming events</li>
-                  {% endif %}
+                  {% end if %}
                 </ul>
               </div>
             </div>
@@ -94,8 +94,8 @@
               </div>
             </div>
             {% else %}
-            <a class="btn btn-primary" href="{{ url_for('login_page') }}">Login</a>
-            {% endif %}
+            <a class="btn btn-primary" href="/login">Login</a>
+            {% end if %}
           </div>
         </div>
       </div>
@@ -103,21 +103,34 @@
 
     <!-- Flash Messages -->
     <div class="container mt-4">
-      {% with messages = request.session.pop('flash_messages', []) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      {% if flash_messages %}
+        {% for message in flash_messages %}
+          <div class="alert-flash mb-3 max-w-4xl mx-auto p-4 rounded-lg border-l-4 shadow-md {% if message.get('category') == 'success' %}bg-green-50 border-green-500 text-green-800{% elif message.get('category') == 'error' or message.get('category') == 'danger' %}bg-red-50 border-red-500 text-red-800{% elif message.get('category') == 'warning' %}bg-yellow-50 border-yellow-500 text-yellow-800{% else %}bg-blue-50 border-blue-500 text-blue-800{% end %}" role="alert">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                {% if message.get('category') == 'success' %}
+                  <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                {% elif message.get('category') == 'error' or message.get('category') == 'danger' %}
+                  <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                {% elif message.get('category') == 'warning' %}
+                  <i class="fas fa-exclamation-circle text-yellow-500 mr-3"></i>
+                {% else %}
+                  <i class="fas fa-info-circle text-blue-500 mr-3"></i>
+                {% end %}
+                <span class="font-medium">{{ message.get('text', message) }}</span>
+              </div>
+              <button type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none" onclick="this.parentElement.parentElement.style.display='none'">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+          </div>
+        {% end %}
+      {% end %}
     </div>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {% block content %}{% endblock %}
+      {% block content %}{% end %}
     </main>
 
     <!-- Footer -->
@@ -125,7 +138,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <div class="flex items-center space-x-3">
-            <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="EventStack Logo" class="w-12 h-12 object-contain" />
+            <img src="{{ static_url('images/image 3.png') }}" alt="EventStack Logo" class="w-12 h-12 object-contain" />
           </div>
           <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>&copy; 2025 EventStack. Built with Tornado.</p>
@@ -155,8 +168,8 @@
         document.getElementById("notificationDropdown")?.classList.add("hidden");
       });
     </script>
-    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
-    {% block scripts %}{% endblock %}
+    <script src="{{ static_url('js/app.js') }}"></script>
+    {% block scripts %}{% end %}
   </body>
 </html>
 

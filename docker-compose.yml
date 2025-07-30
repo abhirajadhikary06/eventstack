@@ -6,6 +6,7 @@ services:
       - "5050:5050"
     environment:
       - COOKIE_SECRET=your-secret-key-change-in-production
+      - PORT=5050
     volumes:
       - .:/app
     restart: unless-stopped
