@@ -4,6 +4,7 @@ import requests
 import json
 import os
 from models.db import get_db_connection, create_user, get_user_by_github_id
+from utils.flash import FlashMessages
 
 # Try to import and load dotenv, but continue without it if not available
 try:
@@ -12,7 +13,15 @@ try:
 except ImportError:
     pass
 
-class LoginHandler(tornado.web.RequestHandler):
+class BaseHandler(tornado.web.RequestHandler):
+    """Base handler with flash message support"""
+    
+    def render(self, template_name, **kwargs):
+        # Add flash messages to template context
+        kwargs['flash_messages'] = FlashMessages.get_messages(self)
+        super().render(template_name, **kwargs)
+
+class LoginHandler(BaseHandler):
     def get(self):
         user_cookie = self.get_secure_cookie("user")
         user = None
@@ -26,7 +35,7 @@ class LoginHandler(tornado.web.RequestHandler):
         
         self.render("login.html", user=user)
 
-class GitHubAuthHandler(tornado.web.RequestHandler):
+class GitHubAuthHandler(BaseHandler):
     def get(self):
         code = self.get_argument("code", None)
         if not code:
@@ -96,13 +105,17 @@ class GitHubAuthHandler(tornado.web.RequestHandler):
                     "avatar_url": user["avatar_url"]
                 })
                 self.set_secure_cookie("user", user_cookie)
+                FlashMessages.success(self, f"Welcome back, {user['username']}! Successfully logged in.")
                 self.redirect("/dashboard")
             else:
+                FlashMessages.error(self, "Failed to create user account. Please try again.")
                 self.redirect("/login?error=user_creation_failed")
         else:
+            FlashMessages.error(self, "Failed to get user information from GitHub. Please try again.")
             self.redirect("/login?error=user_info_failed")
 
-class LogoutHandler(tornado.web.RequestHandler):
+class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
+        FlashMessages.success(self, "You have been successfully logged out!")
         self.redirect("/")

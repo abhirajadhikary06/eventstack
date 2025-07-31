@@ -4,13 +4,14 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 import tornado.log
-from auth import LoginHandler, GitHubAuthHandler, LogoutHandler
-from events import (
+from handlers.auth import LoginHandler, GitHubAuthHandler, LogoutHandler
+from handlers.events import (
     DashboardHandler, EventCreateHandler, EventViewHandler,
-    EventVoteHandler, EventEditHandler, ContactHandler
+    EventVoteHandler, EventEditHandler
 )
-from info import AboutHandler, PrivacyHandler, SupportHandler
-from websocket import VoteWebSocketHandler
+from handlers.info import AboutHandler, PrivacyHandler, SupportHandler, ContactHandler
+from handlers.websocket import VoteWebSocketHandler
+from models.db import init_db
 
 def make_app():
     settings = {
@@ -26,7 +27,7 @@ def make_app():
         (r"/", LoginHandler),
         (r"/login", LoginHandler),
         (r"/logout", LogoutHandler),
-        (r"/complete/github", GitHubAuthHandler),
+        (r"/auth/github", GitHubAuthHandler),
         (r"/dashboard", DashboardHandler),
         (r"/create", EventCreateHandler),
         (r"/event/([a-zA-Z0-9\-]+)", EventViewHandler),
@@ -46,6 +47,9 @@ def make_app():
     ], **settings)
 
 if __name__ == "__main__":
+    # Initialize the database
+    init_db()
+    
     port = int(os.environ.get("PORT", 8888))
     app = make_app()
     server = tornado.httpserver.HTTPServer(app)
