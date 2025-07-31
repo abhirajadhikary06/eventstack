@@ -44,7 +44,15 @@ class EventCreateHandler(BaseAuthHandler):
     @tornado.web.authenticated
     def get(self):
         user = self.get_current_user()
-        self.render("create_event.html", user=user)
+        if not user:
+            self.redirect("/login")
+            return
+        
+        # Add upcoming_events to template context
+        from models.db import get_upcoming_events
+        upcoming_events = get_upcoming_events(limit=5)
+        
+        self.render("create_event.html", user=user, upcoming_events=upcoming_events)
     
     @tornado.web.authenticated
     def post(self):
