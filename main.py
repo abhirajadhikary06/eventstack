@@ -4,14 +4,13 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 import tornado.log
-from auth import LoginHandler, GitHubAuthHandler, LogoutHandler
-from events import (
+from handlers.auth import LoginHandler, GitHubAuthHandler, LogoutHandler
+from handlers.events import (
     DashboardHandler, EventCreateHandler, EventViewHandler,
     EventVoteHandler, EventEditHandler, ContactHandler
 )
-from info import AboutHandler, PrivacyHandler, SupportHandler
-from websocket import VoteWebSocketHandler
-
+from handlers.info import AboutHandler, PrivacyHandler, SupportHandler
+from handlers.websocket import VoteWebSocketHandler
 def make_app():
     settings = {
         "cookie_secret": os.environ.get("COOKIE_SECRET", "super-secret-key"),

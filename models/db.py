@@ -272,3 +272,5 @@ def update_event(event_id, title, description, location, max_applicants):
     cursor.close()
     conn.close()
     return get_event_by_id(event_id)
+def get_upcoming_events():
+    return []
