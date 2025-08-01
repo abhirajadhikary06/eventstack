@@ -171,3 +171,10 @@ class EventEditHandler(BaseAuthHandler):
         )
 
         self.redirect(f"/event/{event_id}")
+import tornado.web
+
+class ContactHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("contact.html")
+
+ 
