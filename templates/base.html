@@ -59,6 +59,14 @@
           </div>
           <div class="flex items-center space-x-4">
             {% if user %} 
+            {% if request.path != '/dashboard' %}
+            <a
+              href="/create"
+              class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-200"
+            >
+              <i class="fas fa-plus mr-2"></i>New Event
+            </a>
+            {% end %}
             <div class="flex items-center space-x-3">
               <!-- Username and avatar with hover -->
               <a
