@@ -100,7 +100,7 @@
         </div>
       </div>
     </nav>
-
+    
     <!-- Flash Messages -->
     <div class="container mt-4">
       {% with messages = request.session.pop('flash_messages', []) %}
@@ -114,32 +114,6 @@
         {% endif %}
       {% endwith %}
     </div>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
-          <div class="flex items-center space-x-3">
-            <img src="{{ url_for('static', path='/images/image 3.png') }}" alt="EventStack Logo" class="w-12 h-12 object-contain" />
-          </div>
-          <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
-            <p>&copy; 2025 EventStack. Built with Tornado.</p>
-          </div>
-          <div class="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400">
-            <a href="/about" class="hover:text-eventstack-orange transition-colors">About</a>
-            <a href="/privacy" class="hover:text-eventstack-orange transition-colors">Privacy</a>
-            <a href="/support" class="hover:text-eventstack-orange transition-colors">Support</a>
-            <a href="/contact" class="hover:text-eventstack-orange transition-colors">Contact</a>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-1 hover:text-eventstack-orange transition-colors" title="GitHub">
-              <i class="fab fa-github"></i>
-              <span>GitHub</span>
-            </a>
-          </div>
         </div>
       </div>
     </footer>
