@@ -1,4 +1,3 @@
-
 # 🔐 Security Policy
 
 Thank you for helping keep **EventStack** secure! This document outlines the guidelines for reporting security issues and best practices.
