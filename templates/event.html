@@ -1,10 +1,121 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "EventStack" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="{{ static_url('css/custom.css') }}" />
+    <link rel="icon" type="image/png" href="{{ static_url('images/favicon.png') }}" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "eventstack-orange": "#D67253",
+              "eventstack-orange-dark": "#C5634A",
+              "eventstack-orange-light": "#E08B73",
+              "eventstack-bg": "#F9F6F1",
+              "eventstack-bg-dark": "#F0EDE6",
+              github: "#24292e",
+              "github-blue": "#0366d6",
+              "github-green": "#28a745",
+              "github-gray": "#f6f8fa",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-eventstack-bg dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-3 group">
+              <div class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
+                <img src="{{ static_url('images/image 3.png') }}" alt="EventStack Logo" class="w-full h-full object-contain" />
+              </div>
+            </a>
+          </div>
+          <div class="flex items-center space-x-4">
+            {% if user %}
+            <!-- 🔔 Notification bell -->
+            <div class="relative">
+              <button id="notificationButton" class="relative p-2 text-gray-400 hover:text-eventstack-orange focus:outline-none">
+                <i class="fas fa-bell text-xl"></i>
+                {% if upcoming_events and len(upcoming_events) > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {{ len(upcoming_events) }}
+                </span>
+                {% end %}
+              </button>
+              <div id="notificationDropdown" class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-50 hidden">
+                <div class="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">
+                  Upcoming Events
+                </div>
+                <ul class="max-h-60 overflow-y-auto">
+                  {% if upcoming_events %}
+                  {% for event in upcoming_events %}
+                  <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <div class="text-sm font-semibold text-eventstack-orange">{{ event['title'] }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ event['start_time'].strftime('%b %d, %Y %I:%M %p') }}
+                    </div>
+                  </li>
+                  {% end %}
+                  {% else %}
+                  <li class="px-4 py-2 text-sm text-gray-500">No upcoming events</li>
+                  {% end %}
+                </ul>
+              </div>
+            </div>
 
-{% block title %}{{ event['title'] }} - EventStack{% end %}
+            <a href="/create" class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-200">
+              <i class="fas fa-plus mr-2"></i>New Event
+            </a>
+            <div class="flex items-center space-x-3">
+              <a href="/dashboard" class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black px-3 py-2 rounded-lg transition duration-200">
+                <img src="{{ user['avatar_url'] }}" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-eventstack-orange" />
+                <span class="text-gray-700 dark:text-gray-300 font-medium group-hover:text-black dark:group-hover:text-white username-span">{{ user['username'] }}</span>
+              </a>
+              <div class="relative group">
+                <a href="/logout" class="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                  <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <span class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:inline-block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 shadow-md transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                  Sign out
+                </span>
+              </div>
+            </div>
+            {% else %}
+            <a class="btn btn-primary" href="/login">Login</a>
+            {% end %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Flash Messages -->
+    <div class="container mt-4">
+      {% if flash_messages %}
+        {% for category, message in flash_messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% end %}
+      {% end %}
+    </div>
 
-{% block content %}
-
-<a href="{{ url_for('index') }}">
+    <!-- Main Content -->
+    <main>
+      <a href="/index">
   <button style="
     background-color: #007bff;
     color: white;
@@ -26,8 +137,6 @@
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ event['title'] }}</h1>
                 {% if event['description'] %}
                 <p class="text-gray-600 mb-3">{{ event['description'] }}</p>
-                {% end %}
-                
                 {% if event['location'] and event['location'].strip() %}
                 <div class="text-sm text-gray-500 space-y-1">
                     
@@ -53,51 +162,37 @@
                                 {% else %}
                                     {% set icon = 'fas fa-video' %}
                                     {% set label = 'Meeting Link' %}
-                                {% end %}
-
                                 <p>
                                     <i class="{{ icon }}"></i>
                                     <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
                                 </p>
-                            {% end %}
-
-
-
                             {% if location_text %}
                                 {% set loc=loc+" "+location_text %}
-                            {% end %}
-
-                        {% else %}
+                            {% else %}
                             {% set loc=loc+" "+text %}
-                        {% end %}
-                    {% end %}
-                    {%if loc !="" %}
+                        {%if loc !="" %}
                     <div class="flex items-center">
                         <p><i class="fas fa-location-dot"></i> 
                         {{ loc }}</p>
                     </div>
-                    {% end %}
-                </div>
-                {% end %}
+                    </div>
                 {% if event['max_applicants'] is not None %}
                 <p class="text-sm text-gray-500 mt-2"><i class="fas fa-users mr-1"></i>Capacity: {{ event['max_applicants'] }}</p>
                 {% else %}
                 <p class="text-sm text-gray-500 mt-2"><i class="fas fa-infinity mr-1"></i>Unlimited capacity</p>
-                {% end %}
-            </div>
+                </div>
             
             {% if event['is_finalized'] %}
             <span class="bg-gray-800 text-white px-3 py-1 rounded-full text-sm">
                 <i class="fas fa-check mr-1"></i>Finalized
             </span>
-            {% end %}
-        </div>
+            </div>
         
         <div class="flex items-center text-sm text-gray-500">
             <img src="{{ event['creator_avatar'] }}" alt="{{ event['creator_username'] }}" class="w-6 h-6 rounded-full mr-2">
             <span>Created by {{ event['creator_username'] }}</span>
             <span class="mx-2">•</span>
-            <span>{{ event['created_at'].strftime('%Y-%m-%d %H:%M:%S') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:19] }}</span>
+            <span>{{ event['created_at'][strftime('%Y-%m-%d %H:%M:%S') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:19]] }}</span>
         </div>
     </div>
 
@@ -114,28 +209,24 @@
                 <p class="text-gray-600 mb-4">
                     <a href="/login" class="text-gray-800 hover:underline">Sign in</a> to vote on time slots.
                 </p>
-            {% end %}
-        {% else %}
+            {% else %}
             <p class="text-gray-800 mb-4">
                 <i class="fas fa-check mr-1"></i>This event has been finalized.
             </p>
-        {% end %}
-
         <div class="space-y-3" id="timeSlotsContainer">
             {% for slot in time_slots %}
-            <div class="border rounded-lg p-4 time-slot {% if event['finalized_slot_id'] == slot['id'] %}border-gray-800 bg-gray-100{% else %}hover:bg-gray-50{% end %}" 
+            <div class="border rounded-lg p-4 time-slot {% if event['finalized_slot_id'] == slot['id'] %}border-gray-800 bg-gray-100{% else %}hover:bg-gray-50" 
                  data-slot-id="{{ slot['id'] }}">
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
                         <div class="font-medium text-gray-900">
-                            {{ slot['slot_datetime'].strftime('%Y-%m-%d at %H:%M') if hasattr(slot['slot_datetime'], 'strftime') else str(slot['slot_datetime']).replace('T', ' at ') }}
+                            {{ slot['slot_datetime'][strftime('%Y-%m-%d at %H:%M') if hasattr(slot['slot_datetime'], 'strftime') else str(slot['slot_datetime']).replace('T', ' at ')] }}
                         </div>
                         {% if event['finalized_slot_id'] == slot['id'] %}
                         <div class="text-sm text-gray-800 mt-1">
                             <i class="fas fa-star mr-1"></i>Final Selection
                         </div>
-                        {% end %}
-                    </div>
+                        </div>
                     
                     <div class="flex items-center space-x-4">
                         <!-- Vote count and avatars -->
@@ -147,27 +238,22 @@
                                          alt="{{ vote['username'] }}" 
                                          title="{{ vote['username'] }}"
                                          class="w-6 h-6 rounded-full border-2 border-white">
-                                    {% end %}
-                                {% end %}
-                            </div>
+                                    </div>
                             <span class="text-sm text-gray-600" id="count-{{ slot['id'] }}">
-                                {% if slot['id'] in votes_by_slot %}{{ len(votes_by_slot[slot['id']]) }}{% else %}0{% end %} votes
+                                {% if slot['id'] in votes_by_slot %}{{ len(votes_by_slot[slot['id']]) }}{% else %}0votes
                             </span>
                         </div>
                         
                         <!-- Vote button -->
                         {% if user and not event['is_finalized'] %}
                         <button onclick="toggleVote({{ slot['id'] }})" 
-                                class="vote-btn px-4 py-2 rounded-md transition-colors {% if slot['id'] in user_votes %}bg-gray-800 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% end %}"
+                                class="vote-btn px-4 py-2 rounded-md transition-colors {% if slot['id'] in user_votes %}bg-gray-800 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 id="vote-btn-{{ slot['id'] }}">
                             {% if slot['id'] in user_votes %}
                                 <i class="fas fa-check mr-1"></i>Voted
                             {% else %}
                                 <i class="fas fa-plus mr-1"></i>Vote
-                            {% end %}
-                        </button>
-                        {% end %}
-                        
+                            </button>
                         <!-- Finalize button (only for creator) -->
                         {% if user and user['id'] == event['created_by'] and not event['is_finalized'] %}
                         <form method="post" class="inline">
@@ -179,12 +265,10 @@
                                 <i class="fas fa-star mr-1"></i>Finalize
                             </button>
                         </form>
-                        {% end %}
-                    </div>
+                        </div>
                 </div>
             </div>
-            {% end %}
-        </div>
+            </div>
     </div>
 
     <!-- Comments Section -->
@@ -211,8 +295,6 @@
                 </div>
             </div>
         </form>
-        {% end %}
-        
         <!-- Comments List -->
         <div class="space-y-4">
             {% if comments %}
@@ -223,24 +305,22 @@
                         <div class="bg-gray-100 rounded-lg p-3">
                             <div class="flex items-center space-x-2 mb-1">
                                 <span class="font-medium text-sm">{{ comment['username'] }}</span>
-                                <span class="text-xs text-gray-500">{{ comment['created_at'].strftime('%Y-%m-%d %H:%M:%S') if hasattr(comment['created_at'], 'strftime') else str(comment['created_at'])[:19] }}</span>
+                                <span class="text-xs text-gray-500">{{ comment['created_at'][strftime('%Y-%m-%d %H:%M:%S') if hasattr(comment['created_at'], 'strftime') else str(comment['created_at'])[:19]] }}</span>
                             </div>
                             <p class="text-gray-700">{{ comment['comment_text'] }}</p>
                         </div>
                     </div>
                 </div>
-                {% end %}
-            {% else %}
-                <p class="text-gray-500 text-center py-4">No comments yet. Be the first to comment!</p>
-            {% end %}
-        </div>
+                {% else %}
+                <p class="text-gray-500 text-center py-4">No comments yet[ Be the first to comment!</p>
+            </div>
     </div>
 </div>
 
 <script src="/static/js/websocket.js"></script>
 <script>
 // Initialize WebSocket for real-time updates
-const eventId = '{{ event["id"] }}';
+const eventId = '{{ event["id"]] }}';
 initWebSocket(eventId);
 
 // Vote toggle function
@@ -267,4 +347,20 @@ async function toggleVote(slotId) {
     }
 }
 </script>
-{% end %}
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+      document.getElementById("notificationButton")?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("notificationDropdown");
+        dropdown?.classList.toggle("hidden");
+      });
+      document.addEventListener("click", function () {
+        document.getElementById("notificationDropdown")?.classList.add("hidden");
+      });
+    </script>
+    <script src="{{ static_url('js/app.js') }}"></script>
+  </body>
+</html>

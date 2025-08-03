@@ -33,13 +33,14 @@ class DashboardHandler(BaseAuthHandler):
                    user=user,
                    created_events=created_events,
                    participated_events=participated_events,
-                   upcoming_events=upcoming_events)
+                   upcoming_events=upcoming_events,
+                   flash_messages=[])
 
 class EventCreateHandler(BaseAuthHandler):
     @tornado.web.authenticated
     def get(self):
         user = self.get_current_user()
-        self.render("create_event.html", user=user)
+        self.render("create_event.html", user=user, upcoming_events=[], flash_messages=[])
     
     @tornado.web.authenticated
     def post(self):
@@ -53,7 +54,9 @@ class EventCreateHandler(BaseAuthHandler):
         if not title or not time_slots:
             self.render("create_event.html", 
                        user=user, 
-                       error="Title and at least one time slot are required")
+                       error="Title and at least one time slot are required",
+                       upcoming_events=[],
+                       flash_messages=[])
             return
         
         unlimited = self.get_argument("unlimited", "off") == "on"
@@ -105,7 +108,9 @@ class EventViewHandler(BaseAuthHandler):
                    votes_by_slot=votes_by_slot,
                    user_votes=user_votes,
                    comments=comments,
-                   user=user)
+                   user=user,
+                   upcoming_events=[],
+                   flash_messages=[])
     
     @tornado.web.authenticated
     def post(self, event_id):
@@ -146,7 +151,7 @@ class EventEditHandler(BaseAuthHandler):
         event = get_event_by_id(event_id)
         if not event or event["created_by"] != user["id"]:
             raise tornado.web.HTTPError(403, "Not authorized")
-        self.render("edit_event.html", user=user, event=event)
+        self.render("edit_event.html", user=user, event=event, upcoming_events=[], flash_messages=[])
 
     @tornado.web.authenticated
     def post(self, event_id):
@@ -171,10 +176,3 @@ class EventEditHandler(BaseAuthHandler):
         )
 
         self.redirect(f"/event/{event_id}")
-import tornado.web
-
-class ContactHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("contact.html")
-
- 

@@ -24,7 +24,7 @@ class LoginHandler(tornado.web.RequestHandler):
             except:
                 pass
         
-        self.render("login.html", user=user)
+        self.render("login.html", user=user, upcoming_events=[])
 
 class GitHubAuthHandler(tornado.web.RequestHandler):
     def get(self):

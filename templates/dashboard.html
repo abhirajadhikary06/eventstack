@@ -1,16 +1,128 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "EventStack" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="{{ static_url('css/custom.css') }}" />
+    <link rel="icon" type="image/png" href="{{ static_url('images/favicon.png') }}" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "eventstack-orange": "#D67253",
+              "eventstack-orange-dark": "#C5634A",
+              "eventstack-orange-light": "#E08B73",
+              "eventstack-bg": "#F9F6F1",
+              "eventstack-bg-dark": "#F0EDE6",
+              github: "#24292e",
+              "github-blue": "#0366d6",
+              "github-green": "#28a745",
+              "github-gray": "#f6f8fa",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-eventstack-bg dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-3 group">
+              <div class="w-20 h-20 relative group-hover:scale-110 transition-transform duration-200">
+                <img src="{{ static_url('images/image 3.png') }}" alt="EventStack Logo" class="w-full h-full object-contain" />
+              </div>
+            </a>
+          </div>
+          <div class="flex items-center space-x-4">
+            {% if user %}
+            <!-- 🔔 Notification bell -->
+            <div class="relative">
+              <button id="notificationButton" class="relative p-2 text-gray-400 hover:text-eventstack-orange focus:outline-none">
+                <i class="fas fa-bell text-xl"></i>
+                {% if upcoming_events and len(upcoming_events) > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {{ len(upcoming_events) }}
+                </span>
+                {% end %}
+              </button>
+              <div id="notificationDropdown" class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-50 hidden">
+                <div class="p-3 border-b border-gray-200 dark:border-gray-700 font-medium">
+                  Upcoming Events
+                </div>
+                <ul class="max-h-60 overflow-y-auto">
+                  {% if upcoming_events %}
+                  {% for event in upcoming_events %}
+                  <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <div class="text-sm font-semibold text-eventstack-orange">{{ event['title'] }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ event['start_time'].strftime('%b %d, %Y %I:%M %p') }}
+                    </div>
+                  </li>
+                  {% end %}
+                  {% else %}
+                  <li class="px-4 py-2 text-sm text-gray-500">No upcoming events</li>
+                  {% end %}
+                </ul>
+              </div>
+            </div>
 
-{% block title %}Dashboard - EventStack{% end %}
+            <a href="/create" class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition duration-200">
+              <i class="fas fa-plus mr-2"></i>New Event
+            </a>
+            <div class="flex items-center space-x-3">
+              <a href="/dashboard" class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black px-3 py-2 rounded-lg transition duration-200">
+                <img src="{{ user['avatar_url'] }}" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-eventstack-orange" />
+                <span class="text-gray-700 dark:text-gray-300 font-medium group-hover:text-black dark:group-hover:text-white username-span">{{ user['username'] }}</span>
+              </a>
+              <div class="relative group">
+                <a href="/logout" class="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                  <i class="fas fa-sign-out-alt"></i>
+                </a>
+                <span class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:inline-block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 shadow-md transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                  Sign out
+                </span>
+              </div>
+            </div>
+            {% else %}
+            <a class="btn btn-primary" href="/login">Login</a>
+            {% end %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Flash Messages -->
+    <div class="container mt-4">
+      {% if flash_messages %}
+        {% for category, message in flash_messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% end %}
+      {% end %}
+    </div>
 
-{% block content %}
-<div class="max-w-6xl mx-auto">
+    <!-- Main Content -->
+    <main>
+      <div class="max-w-6xl mx-auto">
     <!-- Welcome Header -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <div class="flex items-center space-x-4">
             <img src="{{ user['avatar_url'] }}" alt="{{ user['username'] }}" class="w-12 h-12 rounded-full border-2" style="border-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
             <div>
                 <h1 class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">Welcome back, {{ user['username'] }}!</h1>
-                <p class="text-gray-600">Manage your events and see participation activity.</p>
+                <p class="text-gray-600">Manage your events and see participation activity[</p>
             </div>
         </div>
     </div>
@@ -39,7 +151,7 @@
                 <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
                     <i class="fas fa-calendar-plus mr-2"></i>Events You Created
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">{{ len(created_events) }} events</p>
+                <p class="text-gray-600 text-sm mt-1">{{ len(created_events)] }} events</p>
             </div>
             
             <div class="p-6">
@@ -53,11 +165,10 @@
                                         {{ event['title'] }}
                                     </a>
                                     {% if event['description'] %}
-                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}...{% end %}</p>
-                                    {% end %}
+                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}[..</p>
                                     <div class="flex items-center text-xs text-gray-500 mt-2 space-x-3">
                                         <span>
-                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10] }}
+                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10]] }}
                                         </span>
                                         {% if event['location'] and event['location'].strip() %}
                                         <div class="text-sm text-gray-500 space-y-1">
@@ -84,33 +195,21 @@
                                                         {% else %}
                                                             {% set icon = 'fas fa-video' %}
                                                             {% set label = 'Meeting Link' %}
-                                                        {% end %}
-
                                                         <p>
                                                             <i class="{{ icon }}"></i>
                                                             <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
                                                         </p>
-                                                    {% end %}
-
-
-
                                                     {% if location_text %}
                                                         {% set loc=loc+" "+location_text %}
-                                                    {% end %}
-
-                                                {% else %}
+                                                    {% else %}
                                                     {% set loc=loc+" "+text %}
-                                                {% end %}
-                                            {% end %}
-                                            {%if loc !="" %}
+                                                {%if loc !="" %}
                                             <div class="flex items-center">
                                                 <p><i class="fas fa-location-dot"></i> 
                                                 {{ loc }}</p>
                                             </div>
-                                            {% end %}
+                                            </div>
                                         </div>
-                                        {% end %}
-                                    </div>
                                 </div>
                                 {% if event['is_finalized'] %}
                                 <span class="text-white px-2 py-1 rounded-full text-xs" style="background-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
@@ -120,14 +219,12 @@
                                 <span class="px-2 py-1 rounded-full text-xs" style="background-color: #F9F6F1; color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
                                     <i class="fas fa-clock mr-1"></i>Active
                                 </span>
-                                {% end %}
-                            </div>
+                                </div>
                         </div>
-                        {% end %}
-                    </div>
+                        </div>
                 {% else %}
                     <div class="text-center py-8">
-                        <i class="fas fa-calendar-plus text-4xl mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.6;"></i>
+                        <i class="fas fa-calendar-plus text-4xl mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0[6;"></i>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">No events created yet</h3>
                         <p class="text-gray-600 mb-4">Create your first event to get started with scheduling.</p>
                         <a href="/create" 
@@ -136,8 +233,7 @@
                             <i class="fas fa-plus mr-2"></i>Create First Event
                         </a>
                     </div>
-                {% end %}
-            </div>
+                </div>
         </div>
 
         <!-- Participated Events -->
@@ -146,7 +242,7 @@
                 <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
                     <i class="fas fa-vote-yea mr-2"></i>Events You Participated In
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">{{ len(participated_events) }} events</p>
+                <p class="text-gray-600 text-sm mt-1">{{ len(participated_events)] }} events</p>
             </div>
             
             <div class="p-6">
@@ -160,14 +256,13 @@
                                         {{ event['title'] }}
                                     </a>
                                     {% if event['description'] %}
-                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}...{% end %}</p>
-                                    {% end %}
+                                    <p class="text-gray-600 text-sm mt-1">{{ event['description'][:100] }}{% if len(event['description']) > 100 %}[..</p>
                                     <div class="flex items-center text-xs text-gray-500 mt-2 space-x-3">
                                         <span>
-                                            <i class="fas fa-user mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>by {{ event['creator_username'] }}
+                                            <i class="fas fa-user mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>by {{ event['creator_username']] }}
                                         </span>
                                         <span>
-                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'].strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10] }}
+                                            <i class="fas fa-clock mr-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));"></i>{{ event['created_at'][strftime('%Y-%m-%d') if hasattr(event['created_at'], 'strftime') else str(event['created_at'])[:10]] }}
                                         </span>
                                     </div>
                                 </div>
@@ -179,19 +274,16 @@
                                 <span class="px-2 py-1 rounded-full text-xs" style="background-color: #F9F6F1; color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
                                     <i class="fas fa-clock mr-1"></i>Active
                                 </span>
-                                {% end %}
-                            </div>
+                                </div>
                         </div>
-                        {% end %}
-                    </div>
+                        </div>
                 {% else %}
                     <div class="text-center py-8">
                         <i class="fas fa-vote-yea text-4xl mb-4" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.6;"></i>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">No participations yet</h3>
                         <p class="text-gray-600">You haven't voted on any events yet. When you participate in events, they'll appear here.</p>
                     </div>
-                {% end %}
-            </div>
+                </div>
         </div>
     </div>
 
@@ -254,8 +346,8 @@
                 <div class="text-sm text-gray-600">Events Finalized</div>
             </div>
             <div class="text-center">
-                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0.7;">
-                    {{ len([e for e in created_events if not e['is_finalized']]) }}
+                <div class="text-2xl font-bold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); opacity: 0[7;">
+                    {{ len([e for e in created_events if not e['is_finalized']])] }}
                 </div>
                 <div class="text-sm text-gray-600">Active Events</div>
             </div>
@@ -271,4 +363,20 @@ if (document.body.classList.contains('dark-mode')) {
   });
 }
 </script>
-{% end %}
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+      document.getElementById("notificationButton")?.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("notificationDropdown");
+        dropdown?.classList.toggle("hidden");
+      });
+      document.addEventListener("click", function () {
+        document.getElementById("notificationDropdown")?.classList.add("hidden");
+      });
+    </script>
+    <script src="{{ static_url('js/app.js') }}"></script>
+  </body>
+</html>

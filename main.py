@@ -7,9 +7,9 @@ import tornado.log
 from handlers.auth import LoginHandler, GitHubAuthHandler, LogoutHandler
 from handlers.events import (
     DashboardHandler, EventCreateHandler, EventViewHandler,
-    EventVoteHandler, EventEditHandler, ContactHandler
+    EventVoteHandler, EventEditHandler
 )
-from handlers.info import AboutHandler, PrivacyHandler, SupportHandler
+from handlers.info import AboutHandler, PrivacyHandler, SupportHandler, ContactHandler
 from handlers.websocket import VoteWebSocketHandler
 def make_app():
     settings = {

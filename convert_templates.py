@@ -1,9 +1,49 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""
+Template Conversion Script
+Converts Django-style templates to Tornado-compatible templates
+"""
+
+import os
+import re
+from pathlib import Path
+
+def convert_template(file_path):
+    """Convert a single template file from Django to Tornado syntax"""
+    
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Remove Django template inheritance
+    content = re.sub(r'{% extends "base\.html" %}\s*', '', content)
+    content = re.sub(r'{% block title %}(.*?){% end %}\s*', '', content)
+    content = re.sub(r'{% block title %}(.*?){% endblock %}\s*', '', content)
+    content = re.sub(r'{% block content %}\s*', '', content)
+    content = re.sub(r'{% endblock %}\s*', '', content)
+    content = re.sub(r'{% end %}\s*', '', content)
+    
+    # Convert Django template syntax to Tornado
+    content = re.sub(r'{{ url_for\([\'"]([^\'"]+)[\'"]\) }}', r'/\1', content)
+    content = re.sub(r'{{ url_for\([\'"]([^\'"]+)[\'"], path=[\'"]([^\'"]+)[\'"]\) }}', r'{{ static_url(\2) }}', content)
+    content = re.sub(r'{% endif %}', r'{% end %}', content)
+    content = re.sub(r'{% endfor %}', r'{% end %}', content)
+    content = re.sub(r'{% if ([^%]+) and ([^%]+) %}', r'{% if \1 and \2 %}', content)
+    content = re.sub(r'{% if ([^%]+) and ([^%]+) %}', r'{% if \1 and \2 %}', content)
+    
+    # Convert Django filters to Tornado syntax
+    content = re.sub(r'{{ ([^|]+)\|length }}', r'{{ len(\1) }}', content)
+    content = re.sub(r'{{ ([^|]+)\|length }}', r'{{ len(\1) }}', content)
+    
+    # Convert object attribute access to dictionary access
+    content = re.sub(r'{{ ([^\.]+)\.([^}]+) }}', r'{{ \1[\2] }}', content)
+    
+    # Add complete HTML structure
+    html_template = '''<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to EventStack</title>
+    <title>{{ title or "EventStack" }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -115,54 +155,7 @@
 
     <!-- Main Content -->
     <main>
-      <div class="hero text-center">
-          <div class="container">
-              <h1 class="display-4">EventStack</h1>
-              <p class="lead">Your All-in-One Event Management Solution</p>
-              <p>Host, manage, and join events with ease.</p>
-              <p>
-                  <a href="/login" class="btn btn-primary my-2">Get Started</a>
-                  <a href="/about" class="btn btn-secondary my-2">Learn More</a>
-              </p>
-          </div>
-      </div>
-
-      <div id="features" class="features py-5">
-          <div class="container">
-              <div class="row text-center">
-                  <h2 class="pb-2 border-bottom">Features</h2>
-              </div>
-              <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-                  <div class="col d-flex align-items-start">
-                      <div class="feature-card text-center">
-                          <div class="mb-3">
-                              <img src="{{ static_url('images/image 1.png') }}" alt="Create Events" class="img-fluid">
-                          </div>
-                          <h3 class="fs-2">Create Events</h3>
-                          <p>Easily create and customize events with our intuitive interface. Set dates, locations, and details in minutes.</p>
-                      </div>
-                  </div>
-                  <div class="col d-flex align-items-start">
-                      <div class="feature-card text-center">
-                          <div class="mb-3">
-                              <img src="{{ static_url('images/image 2.png') }}" alt="Manage Attendees" class="img-fluid">
-                          </div>
-                          <h3 class="fs-2">Manage Attendees</h3>
-                          <p>Keep track of your attendees, manage registrations, and communicate with them effectively.</p>
-                      </div>
-                  </div>
-                  <div class="col d-flex align-items-start">
-                      <div class="feature-card text-center">
-                          <div class="mb-3">
-                              <img src="{{ static_url('images/image 3.png') }}" alt="Real-time Notifications" class="img-fluid">
-                          </div>
-                          <h3 class="fs-2">Real-time Notifications</h3>
-                          <p>Stay updated with real-time notifications for new registrations, event updates, and messages.</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+      {content}
     </main>
 
     <!-- Scripts -->
@@ -178,4 +171,38 @@
     </script>
     <script src="{{ static_url('js/app.js') }}"></script>
   </body>
-</html>
+</html>'''
+    
+    # Insert the content into the template
+    final_content = html_template.replace('{content}', content)
+    
+    # Write the converted template
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(final_content)
+    
+    print(f"Converted: {file_path}")
+
+def main():
+    """Convert all template files"""
+    templates_dir = Path("templates")
+    
+    # Files to convert (excluding already converted ones)
+    files_to_convert = [
+        "dashboard.html",
+        "event.html", 
+        "create_event.html",
+        "edit_event.html",
+        "about.html",
+        "privacy.html",
+        "support.html"
+    ]
+    
+    for filename in files_to_convert:
+        file_path = templates_dir / filename
+        if file_path.exists():
+            convert_template(file_path)
+        else:
+            print(f"File not found: {file_path}")
+
+if __name__ == "__main__":
+    main() 
