@@ -11,7 +11,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <link href="../static/css/custom.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/custom.css" />
     <link rel="icon" type="image/png" href="/static/images/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,6 +19,11 @@
       href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+      rel="stylesheet"
+    />
+
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -30,7 +35,7 @@
               "eventstack-orange-light": "#E08B73",
               "eventstack-bg": "#F9F6F1",
               "eventstack-bg-dark": "#F0EDE6",
-              "github": "#24292e",
+              github: "#24292e",
               "github-blue": "#0366d6",
               "github-green": "#28a745",
               "github-gray": "#f6f8fa",
@@ -76,7 +81,7 @@
               <!-- Username and avatar with hover -->
               <a
                 href="/dashboard"
-                class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black  py-2 rounded-lg transition duration-200"
+                class="group flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-black py-2 rounded-lg transition duration-200"
               >
                 <img
                   src="{{ user['avatar_url'] }}"

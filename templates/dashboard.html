@@ -3,13 +3,13 @@
 {% block title %}Dashboard - EventStack{% end %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
+<div class="max-w-6xl mx-auto" style="font-family:'Bricolage Grotesque', 'sans-serif';">
     <!-- Welcome Header -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-center space-x-4">
             <img src="{{ user['avatar_url'] }}" alt="{{ user['username'] }}" class="w-12 h-12 rounded-full border-2" style="border-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
             <div>
-                <h1 class="text-2xl font-bold text-4xl py-2">Welcome back, {{ user['username'] }}!</h1>
+                <h1 class="text-2xl font-bold text-4xl py-2" style="font-family: 'Merriweather', 'serif';">Welcome back, {{ user['username'] }}!</h1>
                 <p class="text-gray-600">Manage your events and see participation activity.</p>
             </div>
         </div>
@@ -19,7 +19,8 @@
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-lg font-semibold mb-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">Quick Actions</h2>
+                <h2 class="text-lg font-semibold mb-1" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); background: transparent !important;
+">Quick Actions</h2>
                 <p class="text-gray-600">Get started with common tasks.</p>
             </div>
             <div class="flex space-x-3">
@@ -35,7 +36,7 @@
         <!-- Created Events -->
         <div class="bg-white rounded-lg shadow-sm">
             <div class="p-6 border-b border-gray-200">
-                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
+                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); background: transparent !important;">
                     <i class="fas fa-calendar-plus mr-2 text-eventstack-orange"></i>Events You Created
                 </h2>
                 <p class="text-gray-600 text-sm mt-1">{{ len(created_events) }} events</p>
@@ -141,7 +142,7 @@
         <!-- Participated Events -->
         <div class="bg-white rounded-lg shadow-sm">
             <div class="p-6 border-b border-gray-200">
-                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
+                <h2 class="text-xl font-semibold" style="color: rgb(17 24 39 / var(--tw-text-opacity, 1)); background: transparent !important;">
                     <i class="fas fa-vote-yea mr-2 text-eventstack-orange"></i>Events You Participated In
                 </h2>
                 <p class="text-gray-600 text-sm mt-1">{{ len(participated_events) }} events</p>
@@ -195,35 +196,33 @@
 
     <!-- Activity Summary -->
      
-    <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
-        <h2 class="text-xl font-semibold mb-4">
-            <i class="fas fa-chart-bar mr-2"></i>Activity Summary
+        <h2 class="text-xl font-semibold mb-4 my-3">
+            <i class="fas fa-chart-bar mr-2 "></i>Activity Summary
         </h2>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-32">
-            <div class="flex flex-col items-center justify-center bg-[#fed7aa] rounded-md py-4 shadow-sm">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md">
     <div class="text-2xl font-bold">{{ len(created_events) }}</div>
     <div class="text-sm text-gray-600">Events Created</div>
 </div>
 
-            <div class="flex flex-col items-center justify-center bg-[#fdba74] rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
                 <div class="text-2xl font-bold">{{ len(participated_events) }}</div>
                 <div class="text-sm text-gray-600">Events Participated</div>
             </div>
-            <div class="flex flex-col items-center justify-center bg-[#fcb076] rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
                 <div class="text-2xl font-bold ">
                     {{ len([e for e in created_events if e['is_finalized']]) }}
                 </div>
                 <div class="text-sm text-gray-600">Events Finalized</div>
             </div>
-            <div class="flex flex-col items-center justify-center bg-[#fa944d] rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
                 <div class="text-2xl font-bold">
                     {{ len([e for e in created_events if not e['is_finalized']]) }}
                 </div>
                 <div class="text-sm text-gray-600">Active Events</div>
             </div>
         </div>
-    </div>
 </div>
 <script>
 // Remove all background highlights in dark mode for dashboard
