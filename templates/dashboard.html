@@ -7,9 +7,12 @@
     <!-- Welcome Header -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-center space-x-4">
-            <img src="{{ user['avatar_url'] }}" alt="{{ user['username'] }}" class="w-12 h-12 rounded-full border-2" style="border-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
+            <img src="{{ user['avatar_url'] }}" alt="{{ user['username'] }}" class="w-12 h-12 rounded-full" style="border-color: rgb(17 24 39 / var(--tw-text-opacity, 1));">
             <div>
-                <h1 class="text-2xl font-bold text-4xl py-2" style="font-family: 'Merriweather', 'serif';">Welcome back, {{ user['username'] }}!</h1>
+                <h1 class="text-2xl font-bold text-4xl py-2 typing-text">
+  Welcome back, {{ user['username'] }}!
+</h1>
+
                 <p class="text-gray-600">Manage your events and see participation activity.</p>
             </div>
         </div>
@@ -25,9 +28,10 @@
             </div>
             <div class="flex space-x-3">
                 <a href="/create" 
-                   class="text-white px-4 py-2 rounded-md bg-eventstack-orange transition-colors hover:opacity-90" >
-                    <i class="fas fa-plus mr-2"></i>New Event
-                </a>
+   class="creative-btn text-white px-4 py-2 rounded-md bg-eventstack-orange font-semibold flex items-center justify-center">
+    <i class="fas fa-plus mr-2"></i>New Event
+</a>
+
             </div>
         </div>
     </div>
@@ -131,9 +135,10 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-2">No events created yet</h3>
                         <p class="text-gray-600 mb-4">Create your first event to get started with scheduling.</p>
                         <a href="/create" 
-                           class="inline-flex items-center text-white px-4 py-2 rounded-md bg-eventstack-orange transition-colors hover:opacity-90">
-                            <i class="fas fa-plus mr-2 "></i>Create First Event
-                        </a>
+   class="creative-btn inline-flex items-center text-white px-4 py-2 rounded-md bg-eventstack-orange font-semibold">
+    <i class="fas fa-plus mr-2"></i>Create First Event
+</a>
+
                     </div>
                 {% end %}
             </div>
@@ -201,22 +206,26 @@
         </h2>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-32">
-            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 transform hover:ring-2 hover:ring-eventstack-orange">
+
     <div class="text-2xl font-bold">{{ len(created_events) }}</div>
     <div class="text-sm text-gray-600">Events Created</div>
 </div>
 
-            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 transform hover:ring-2 hover:ring-eventstack-orange">
+
                 <div class="text-2xl font-bold">{{ len(participated_events) }}</div>
                 <div class="text-sm text-gray-600">Events Participated</div>
             </div>
-            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 transform hover:ring-2 hover:ring-eventstack-orange">
+
                 <div class="text-2xl font-bold ">
                     {{ len([e for e in created_events if e['is_finalized']]) }}
                 </div>
                 <div class="text-sm text-gray-600">Events Finalized</div>
             </div>
-            <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-md">
+            <div class="flex flex-col items-center justify-center bg-white rounded-md py-4 shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 transform hover:ring-2 hover:ring-eventstack-orange">
+
                 <div class="text-2xl font-bold">
                     {{ len([e for e in created_events if not e['is_finalized']]) }}
                 </div>
