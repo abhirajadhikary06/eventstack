@@ -100,6 +100,18 @@
         </div>
       </div>
     </nav>
+    <!-- Scroll to Top Button -->
+<!-- Scroll to Top Button -->
+<button
+  id="scrollToTopBtn"
+  onclick="scrollToTop()"
+  title="Go to top"
+  class="fixed bottom-6 right-6 hidden z-50 bg-[#1f2937] hover:bg-[#374151] text-white text-xl p-3 rounded-full shadow-lg transition duration-300"
+>
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+
     
     <!-- Flash Messages -->
     <div class="container mt-4">
@@ -135,6 +147,26 @@
       });
     </script>
     <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+    <script>
+  const scrollBtn = document.getElementById("scrollToTopBtn");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 100) {
+      scrollBtn.classList.remove("hidden");
+    } else {
+      scrollBtn.classList.add("hidden");
+    }
+  });
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+</script>
+
+
     {% block scripts %}{% endblock %}
   </body>
 </html>
