@@ -1,4 +1,4 @@
-# EventStack
+# 🎉 EventStack
 
 <p align="center">
   <img src="static/images/favicon.png" alt="EventStack Logo" width="120" height="120">
@@ -10,84 +10,133 @@
 
 ---
 
-## What is EventStack?
+## 🧐 What is EventStack?
 
-**EventStack** is a modern platform designed to make event planning and coordination effortless. Whether you're organizing team meetings, social hangouts, or community events, EventStack helps you find the perfect time that works for everyone.
-
----
-## ⭐ Star this repository!
-
-[![GitHub stars](https://img.shields.io/github/stars/abhirajadhikary06/eventstack?style=social)](https://github.com/abhirajadhikary06/eventstack/stargazers)
+**EventStack** is a modern and collaborative platform designed to make event planning and coordination effortless. Whether you're organizing team meetings, social hangouts, or community events, EventStack helps you find the perfect time that works for everyone — democratically and transparently.
 
 ---
-## Features
 
-### Simple Authentication
-- Sign in securely using your GitHub account.
-- No need to remember new passwords.
+## ⭐ Star this Repository
 
-### Easy Event Creation
+If you find this project useful, please consider giving it a ⭐ on [GitHub](https://github.com/abhirajadhikary06/eventstack/stargazers)!
+=======
+
+
+### 🔭 Show your support
+
+If you like this project, consider starring it!
+
+<p align="center">
+  <a href="https://github.com/abhirajadhikary06/eventstack/stargazers">
+    <img src="https://img.shields.io/github/stars/abhirajadhikary06/eventstack?style=social" alt="GitHub Repo stars">
+  </a>
+</p>
+
+You can also see the amazing contributors:
+  
+<p align="center">
+  <a href="https://github.com/abhirajadhikary06/eventstack/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=abhirajadhikary06/eventstack" />
+  </a>
+</p>
+
+
+---
+
+## 🚀 Features
+
+### 🔐 Simple Authentication
+- Secure sign-in using your GitHub account.
+- No password management required.
+
+### 📝 Easy Event Creation
 Create events in seconds:
 1. Enter a title and description.
-2. Specify the location.
+2. Add location details.
 3. Propose multiple time slots.
 
-### Democratic Time Selection
-- Participants vote on their preferred time slots.
-- View votes update in real-time.
-- Easily finalize the most popular option.
+### 🗳️ Democratic Time Selection
+- Participants vote on preferred slots.
+- Real-time voting updates.
+- Finalize the most popular option.
 
-### Real-Time Updates
-- See updates live without refreshing the page.
-- Experience seamless collaboration.
+### 🔄 Real-Time Updates
+- Live data sync using websockets.
+- Seamless planning experience.
 
-### Event Discussion
-- Built-in comment section for each event.
-- Discuss details, ask questions, share updates.
+### 💬 Event Discussion
+- Built-in comment thread per event.
+- Collaborate, clarify, and coordinate.
 
-### Responsive Design
-- Access from desktop, tablet, or mobile.
-- Plan events anytime, anywhere.
+### 📱 Responsive UI
+- Accessible on desktop, tablet, and mobile.
+- Plan events from anywhere.
 
----
-
-## How It Works
-
-1. Create an Event → Add time slots and event details.
-2. Share with Participants → Send them the event link.
-3. Collect Votes → Attendees vote on suitable slots.
-4. Finalize the Event → Pick the best time.
-5. Coordinate Further → Use the comment section.
+### 🐳 Docker Support
+- Easy to build and deploy via Docker.
 
 ---
 
-## Use Cases
+## 🔧 How It Works
 
-- Team Meetings  
-- Social Gatherings  
-- Study Groups  
-- Community Workshops  
-- Family Reunions
-
----
-
-## Getting Started
-
-Visit the platform at [EventStack Website](#) to create your first event.
+1. **Create an Event** → Add details and time slots.
+2. **Share with Participants** → Share the generated event link.
+3. **Collect Votes** → Attendees vote on suitable times.
+4. **Finalize the Event** → Choose the best slot.
+5. **Discuss Details** → Use the built-in comment section.
 
 ---
 
-## Tech Stack
+## 💡 Use Cases
 
-- Frontend: HTML, CSS, JavaScript  
-- Backend: Python (Tornado)  
-- Database: SQLite
+- 🧑‍💼 Team Meetings  
+- 🍕 Social Gatherings  
+- 📚 Study Groups  
+- 🛠️ Community Workshops  
+- 👨‍👩‍👧 Family Reunions
 
 ---
 
-## Running with Docker
+## 🧪 Tech Stack
 
-You can run EventStack easily using Docker:
+- **Frontend**: HTML, CSS, JavaScript  
+- **Backend**: Python (Tornado)  
+- **Database**: SQLite
+
+---
+
+## 📁 File Structure :-
+
+```bash
+eventstack/
+
+├── .vercel/                # Vercel deployment config
+├── handlers/               # Tornado request handlers
+│   └── __pycache__/        # Compiled Python cache files
+├── models/                 # Database and application models
+├── static/                 # Static assets
+│   ├── css/                # Stylesheets
+│   ├── images/             # Icons and images
+│   └── js/                 # JavaScript files
+├── templates/              # HTML templates (Jinja2)
+├── use/                    # Utility modules
+│   ├── shareable_links/    # Modules for generating sharable links
+│   └── tests/              # Test cases and test utilities
+├── .gitignore              # Specifies files/folders to ignore in Git
+├── Dockerfile              # Docker image configuration
+├── docker-compose.yml      # Multi-container Docker configuration
+├── main.py                 # Main application entry point
+├── requirements.txt        # Python dependencies list
+├── README.md               # Project overview and documentation
+├── LICENSE.md              # Project license (MIT License)
+├── CONTRIBUTING.md         # Guidelines for contributing to the project
+└── CODE_OF_CONDUCT.md      # Code of conduct for contributors and community
+            
+```
+
+---
+
+## 🐳 Running with Docker
 
 1. **Build the Docker image:**
    ```sh
@@ -112,19 +161,20 @@ You can run EventStack easily using Docker:
 
 ---
 
-# EventStack
+# 👥 Contributors
+Thanks to all the amazing people who have contributed to this project:
 
 [![Contributors](https://contrib.rocks/image?repo=abhirajadhikary06/eventstack)](https://github.com/abhirajadhikary06/eventstack/graphs/contributors)
 
 
-## Contributing
+## 🛠️ Contributing
 
 We welcome contributions to make EventStack even better.  
 Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a pull request.
 
 ---
 
-## Code of Conduct
+## 💬 Code of Conduct
 
 Before participating in our community, please review our [Code of Conduct](CODE_OF_CONDUCT.md).
 
@@ -139,3 +189,4 @@ This project is licensed under the [MIT License](LICENSE).
 <p align="center">
   Made with ❤️ for better event planning
 </p>
+
