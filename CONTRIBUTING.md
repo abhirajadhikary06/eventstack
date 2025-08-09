@@ -18,6 +18,7 @@ Thank you for your interest in contributing to EventStack! This document provide
   - [Code Style](#code-style)
 - [Testing](#testing)
 - [Documentation](#documentation)
+- [Communication](#communication)
 
 ## Code of Conduct
 
@@ -79,6 +80,16 @@ EventStack is a platform for managing, organizing, and stacking events efficient
    The application will be available at http://localhost:5000
 
 ## How to Contribute
+There are many ways to contribute:
+
+📃 Improve documentation
+
+🐞 Report or fix bugs
+
+✨ Add new features
+
+🎨 Improve UI/UX
+
 
 ### Reporting Bugs
 
@@ -159,6 +170,16 @@ Please update documentation when adding or modifying features:
 - Update function docstrings
 - If adding new API endpoints, document them appropriately
 
+## Communication
+If you have questions, suggestions, or need help:
+
+Start a discussion in the GitHub Discussions (if enabled).
+
+Open a new issue if you're facing a bug or want to propose an enhancement.
+
+For urgent matters, mention maintainers directly in your issue or PR using @maintainer-username.
+
+Stay respectful, constructive, and inclusive in all your interactions.
 ---
 
 Thank you for contributing to EventStack! Your efforts help make this project better for everyone.
