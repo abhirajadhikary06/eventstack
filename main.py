@@ -25,7 +25,8 @@ def make_app():
         (r"/", LoginHandler),
         (r"/login", LoginHandler),
         (r"/logout", LogoutHandler),
-        (r"/complete/github", GitHubAuthHandler),
+        (r"/auth/github", GitHubAuthHandler),  # This is where the login button points to
+        (r"/complete/github/", GitHubAuthHandler),
         (r"/dashboard", DashboardHandler),
         (r"/create", EventCreateHandler),
         (r"/event/([a-zA-Z0-9\-]+)", EventViewHandler),

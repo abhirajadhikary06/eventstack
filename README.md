@@ -43,6 +43,29 @@ You can also see the amazing contributors:
 
 ---
 
+## 🔧 Setup GitHub OAuth
+
+1. **Create a GitHub OAuth App**
+   - Go to [GitHub Developer Settings](https://github.com/settings/developers)
+   - Click "New OAuth App"
+   - Fill in the following details:
+     - **Application name**: EventStack (or your preferred name)
+     - **Homepage URL**: `http://localhost:8888`
+     - **Authorization callback URL**: `http://localhost:8888/complete/github/`
+   - Click "Register application"
+   - On the next page, you'll see your Client ID. Click "Generate a new client secret" to get your client secret.
+
+2. **Set up environment variables**
+   - Run the setup script:
+     ```bash
+     python setup_env.py
+     ```
+   - When prompted, enter your GitHub OAuth Client ID and Client Secret
+   - The script will create a `.env` file with your configuration
+
+3. **Restart your application**
+   - Make sure to restart your application for the changes to take effect
+
 ## 🚀 Features
 
 ### 🔐 Simple Authentication
