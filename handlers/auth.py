@@ -28,23 +28,47 @@ class LoginHandler(tornado.web.RequestHandler):
 
 class GitHubAuthHandler(tornado.web.RequestHandler):
     def get(self):
+        print(f"GitHubAuthHandler: Request path - {self.request.path}")
+        print(f"GitHubAuthHandler: Request arguments - {self.request.arguments}")
+        
         code = self.get_argument("code", None)
+        error = self.get_argument("error", None)
+        
+        if error:
+            error_desc = self.get_argument("error_description", "No description provided")
+            print(f"GitHub OAuth error: {error} - {error_desc}")
+            self.redirect(f"/login?error=github_auth_failed&reason={error}")
+            return
+            
         if not code:
             # Redirect to GitHub OAuth
-            github_client_id = os.getenv("GITHUB_CLIENT_ID", "")
-            # Use the callback URL from environment variable
+            github_client_id = os.getenv("GITHUB_CLIENT_ID")
+            if not github_client_id:
+                print("Error: GITHUB_CLIENT_ID environment variable is not set")
+                self.redirect("/login?error=github_config")
+                return
+                
             redirect_uri = os.getenv("GITHUB_CALLBACK_URL", f"{self.request.protocol}://{self.request.host}/complete/github/")
+            print(f"Redirecting to GitHub OAuth. Client ID: {github_client_id}, Callback URL: {redirect_uri}")
+            
             github_url = f"https://github.com/login/oauth/authorize?client_id={github_client_id}&redirect_uri={redirect_uri}&scope=user:email"
             self.redirect(github_url)
         else:
-            # Handle callback
+            print(f"Exchanging code for token. Code: {code}")
             self.exchange_code_for_token(code)
     
     def exchange_code_for_token(self, code):
-        client_id = os.getenv("GITHUB_CLIENT_ID", "")
-        client_secret = os.getenv("GITHUB_CLIENT_SECRET", "")
+        client_id = os.getenv("GITHUB_CLIENT_ID")
+        client_secret = os.getenv("GITHUB_CLIENT_SECRET")
+        
+        if not client_id or not client_secret:
+            print("Error: Missing GitHub OAuth credentials")
+            self.redirect("/login?error=github_config")
+            return
+            
         # Use the callback URL from environment variable
         redirect_uri = os.getenv("GITHUB_CALLBACK_URL", f"{self.request.protocol}://{self.request.host}/complete/github/")
+        print(f"Exchange token - Client ID: {client_id}, Redirect URI: {redirect_uri}")
         
         # Exchange code for access token
         token_url = "https://github.com/login/oauth/access_token"
