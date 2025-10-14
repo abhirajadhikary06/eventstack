@@ -272,5 +272,20 @@ def update_event(event_id, title, description, location, max_applicants):
     cursor.close()
     conn.close()
     return get_event_by_id(event_id)
-def get_upcoming_events():
-    return []
+
+def get_upcoming_events(user_id, start_time, end_time):
+    """Get upcoming events for the given user within a time range"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT e.*, u.username as creator_username, u.avatar_url as creator_avatar
+        FROM events e
+        JOIN users u ON e.created_by = u.id
+        WHERE e.created_by = ? 
+          AND e.created_at BETWEEN ? AND ?
+        ORDER BY e.created_at ASC
+    """, (user_id, start_time, end_time))
+    events = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [dict(event) for event in events]
