@@ -28,10 +28,15 @@ def make_app():
         (r"/", LoginHandler),
         (r"/login", LoginHandler),
         (r"/logout", LogoutHandler),
+
         (r"/auth/github", GitHubAuthHandler),         # ✅ Added route
         (r"/complete/github", GitHubAuthHandler),     # ✅ Keep callback route
 
         # Event Routes
+=======
+        (r"/auth/github", GitHubAuthHandler),
+        (r"/complete/github/", GitHubAuthHandler),
+
         (r"/dashboard", DashboardHandler),
         (r"/create", EventCreateHandler),
         (r"/event/([a-zA-Z0-9\-]+)", EventViewHandler),

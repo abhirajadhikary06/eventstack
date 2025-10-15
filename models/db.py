@@ -274,6 +274,7 @@ def update_event(event_id, title, description, location, max_applicants):
     return get_event_by_id(event_id)
 
 def get_upcoming_events(user_id, start_time, end_time):
+
     """Get upcoming events for the given user within a time range"""
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -289,3 +290,28 @@ def get_upcoming_events(user_id, start_time, end_time):
     cursor.close()
     conn.close()
     return [dict(event) for event in events]
+
+    """Get events that the user is participating in and have upcoming time slots"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Query to get events where the user has voted for time slots
+    # and the event has time slots within the specified time range
+    cursor.execute("""
+        SELECT DISTINCT e.* 
+        FROM events e
+        JOIN time_slots ts ON e.id = ts.event_id
+        JOIN votes v ON ts.id = v.time_slot_id AND e.id = v.event_id
+        WHERE v.user_id = ? 
+          AND ts.slot_datetime BETWEEN ? AND ?
+        ORDER BY ts.slot_datetime ASC
+    """, (user_id, start_time.isoformat(), end_time.isoformat()))
+    
+    events = []
+    for row in cursor.fetchall():
+        events.append(dict(row))
+    
+    cursor.close()
+    conn.close()
+    return events
+
